@@ -1,0 +1,35 @@
+*{
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace; 
+    padding: 0;    
+    margin: 0;   
+}
+:root{
+    --white: #fff;
+    --blue: #2864e7;
+    --purple: #803497;
+    --pink: #df4bba;
+    --orange: rgba(194, 47, 10);
+    --dark: rgba(39, 39, 39, .7);
+    --black: #00000005;
+    --dark-blue: #000b;
+}
+body{
+    min-height: 100vh;
+    background: var(--purple);
+}
+
+
+/* ==============Home============ */
+.home{
+    background: var(--black);
+}
+.intro .me{
+    background: url('../images/riri.jpg');
+    
+    min-height: 60vh;
+}
+
+.error{
+    padding: 40px;
+}

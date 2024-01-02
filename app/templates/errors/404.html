@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Not Found {% endblock %}
+
+{% block content %}
+<div class="error">
+    <h3>404, NOT FOUND.</h3>
+    <img src="{{ url_for('static', filename='images/riri.jpg') }}" alt="">
+    <p>Ooops, the resource you are looking for could'nt be found.</p>
+</div>
+{% endblock %}
