@@ -9,27 +9,269 @@
     --blue: #2864e7;
     --purple: #803497;
     --pink: #df4bba;
-    --orange: rgba(194, 47, 10);
+    --orange:#ff5722;
     --dark: rgba(39, 39, 39, .7);
     --black: #00000005;
+    --light-blue: #2a2185;
     --dark-blue: #000b;
 }
 body{
     min-height: 100vh;
-    background: var(--purple);
+    background: var(--purple) !important;
 }
-
-
+*::-webkit-scrollbar{
+    width: 0.5rem;
+    height: 0.5rem;
+}
+ *::-webkit-scrollbar-track{
+    background: rgb(155, 155, 155);
+ }
+*::-webkit-scrollbar-thumb {
+    background-color: #3d3737;
+    border-radius: 30px;
+ }
 /* ==============Home============ */
 .home{
     background: var(--black);
 }
-.intro .me{
-    background: url('../images/riri.jpg');
-    
+.intro{
+    position: relative;
+    background-color: var(--purple);
     min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-bottom-left-radius: 0%;   
+}
+    
+.intro::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: var(--dark-blue);
+}
+.intro .hello{
+    padding: 0 5%;
+    margin-right: auto;
+    color: #fff;
+}
+.hello h1, h2, h3{
+    padding: .2rem 0;
+}
+.hello h1{
+    font-size: 40px;
+    word-spacing: .02px;
+}
+.hello h2{
+    font-size: 30px;
+    font-weight: 600;
+    word-spacing: .2px;
+}
+.hello h2 span{
+    color: var(--orange) !important;
+}
+.hello h3{
+    font-size: 20px;
+    word-spacing: .08px;
+}
+.hello p{
+    font-size: 20px;
+}
+.hello h3 span{
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--orange);
+}
+.hello .title h2{
+    animation: 5s ease-in-out infinite fromRight;
+}
+.hello .title p{
+    animation: 5s ease-in-out infinite slide;
+}
+.hello > div:nth-child(1) .title h2,
+.hello > div:nth-child(1) .title p{
+    animation-delay: 0s;
+}
+.hello > div:nth-child(2) .title h2,
+.hello > div:nth-child(2) .title p{
+    animation-delay: 1s;
+}
+.hello > div:nth-child(3) .title h2,
+.hello > div:nth-child(3) .title p{
+    animation-delay: 2s;
 }
 
+@keyframes slide{
+    0%, 40%{
+        opacity: 0;
+        transform: translateY(-50%);
+    }
+    60%, 80%{
+        opacity: 1;
+        transform: translateY(0%);
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(50%);
+    }
+}
+@keyframes fromRight{
+    0%, 40%{
+        opacity: 0;
+        transform: translateX(50%);
+    }
+    60%, 80%{
+        opacity: 1;
+        transform: translateX(0%);
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(-50%);
+    }
+    
+}
+.intro .me{
+    position: relative;
+}
+.me::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .4);
+    border-bottom-left-radius: 100%;
+    z-index: 1;
+}
+.me img{
+    position: relative;
+    width: 100%;
+    height: 600px;
+    border-bottom-left-radius: 100%;
+}
+
+
+/* ============ Expertise ================= */
+.expertise{
+    background: var(--dark);
+    height: 100%;
+    min-height: 80vh;
+    padding: 2em 5em;
+}
+.expertise h1{
+    color: var(--white);
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+}
+.expertise .flex{
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px;
+    padding: 3em 0;
+}
+.flex .flex-card{
+    height: 100%;
+    min-height: 300px;
+    border: 1px solid var(--white);
+    border-radius: 20px;
+    box-shadow: 0 2px 5px 3px rgba(255, 255, 255, .4);
+    color: var(--pink);
+    text-align: center;
+    padding: 5em 2em;
+    cursor: pointer;
+    transition: 1s ease-in-out background, border, color;
+}
+.flex .flex-card:hover{
+    border: none;
+    box-shadow: none;
+    background: #2a2185;
+    color: var(--white);
+}
+
+
+/* =============PROJECTS================= */
+.projects{
+    padding: 5em 3em;
+    position: relative;
+    background: var(--dark);
+    height: 100%;
+    min-height: 80vh;
+}
+.projects::before{
+    content: ' ';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #011418;
+}
+.main{
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    grid-gap: 30px;
+}
+.main .pros{
+    position: relative;
+    padding: 20% 0;}
+.pros p{
+    text-align: center;
+    color: var(--white) !important;
+}
+.pros span{
+    font-size: 20px;
+    color: var(--orange);
+}
+#controllers {
+    overflow: hidden;
+}
+#controllers::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 1;
+}
+#controllers .carousel-inner img{
+    width: 100%;
+    height: 400px;
+}
+#controllers .carousel-caption{
+    background-color: var(--purple);
+    z-index: 10;
+    
+}
+#controllers .carousel-caption button{
+    border: 2px solid(--pink) !important;
+    border-radius: 20px;
+    padding: .2em;
+    background: var(--white);
+    color: #ff5722;
+    outline: none !important;
+    cursor: pointer !important;
+}
 .error{
+    background-image: linear-gradient(to right, var(--pink), var(--blue)), url('../images/njaramba.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
     padding: 40px;
+    height: 100%;
+}
+.error h3{
+    font-size: 50px;
+    font-weight: 500;
+    color: #fff;
+}
+.error p{
+    font-size: 20px;
 }
