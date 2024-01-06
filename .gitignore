@@ -1,5 +1,7 @@
 env/
 .vscode/
+__pycache__/
+config.py 
 
 *.pyc
 .idea
@@ -8,8 +10,6 @@ env/
 *.sql
 *.log
 *.sqlite
-
-
 
 *.gz
 *.iso

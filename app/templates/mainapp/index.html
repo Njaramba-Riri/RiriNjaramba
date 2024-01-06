@@ -96,11 +96,61 @@
                     </a>
 
                 </div>
-                    <ol class="carousel-indicators">
-                        <li data-target="#controllers" data-slide-to="0" class="active"></li>
-                        <li data-target="#controllers" data-slide-to="1"></li>
-                        <li data-target="#controllers" data-slide-to="2"></li>
-                    </ol>                
+                <ol class="carousel-indicators">
+                    <li class="slider" data-target="#controllers" data-slide-to="0"></li>
+                    <li class="slider" data-target="#controllers" data-slide-to="1"></li>
+                    <li class="slider" data-target="#controllers" data-slide-to="2"></li>
+                </ol>                
+            </div>            
+        </div>
+    </section>
+    <section class="Njaramba">
+        <div class="more">
+            <div class="contact">
+                <form action="{{ url_for('mainapp.index') }}">
+                    {{ form.hidden_tag }}
+                    {% for field in form %}
+                        {% if field.widget.input_type != 'hidden' %}
+                            {% if field.type == 'StringField' %}
+                            <div class="input">
+                                {{ field.label(class_='label') }}
+                                {{ field(class_='input-area') }}
+                            </div>
+                            {% elif field.type == 'TextAreaField' %}
+                            <div class="input">
+                                {{ field.label(class_='label') }}
+                                {{ field(class_='text-area') }}
+                            </div>
+                            {% else %}
+                                <div class="submit">
+                                    <p>This is FRUSTRATING!!!!!</p>
+                                    <ion-icon name="send-outline"></ion-icon>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}                
+                </form>
+            </div>
+            <div class="socials">
+                <h2>You can reach me through: </h2>
+                <div class="icons">
+                    <a href="mailto: jamesriri03@gmail.com" target="_top">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        Send Email
+                    </a>
+                    <a href="https://linkedin.com/in/riri-njaramba/">
+                        <ion-icon name="logo-linkedin"></ion-icon>
+                        LinkedIn
+                    </a>                
+                    <a href="https://twitter.com/icy_riri">
+                        <ion-icon name="logo-twitter"></ion-icon>
+                        Twitter
+                    </a>
+                    <a href="https://medium.com/@jamesriri03">
+                        <ion-icon name="logo-medium"></ion-icon>
+                        Medium
+                    </a>
+                </div>
             </div>            
         </div>
     </section>
