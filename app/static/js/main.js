@@ -1,14 +1,24 @@
-document.addEventListener("DOMContentLoaded", (event) => {
-    let sliders = document.querySelectorAll('.carousel-indicators li')
-
-    function activeLink(){
-        sliders.forEach((item) => {
+document.addEventListener('DOMContentLoaded', () => {
+    const controls = document.querySelectorAll('.slider');
+    
+    function activeLi() {
+        controls.forEach((item) => {
             item.classList.remove('active');
         });
         this.classList.add('active');
     }
 
-    sliders.forEach((item) => {
-        item.addEventListener('click', activeLink);
+    controls.forEach((control) => {
+        control.addEventListener('click', activeLi);
     });
+});
+
+
+window.addEventListener('scroll', function(){
+    var contacts = document.querySelector(".icons a");
+    var position = contacts.getBoundingClientRect();
+
+    if(position.top >= 0 && position.bottom <= window.innerHeight){
+        contacts.style.animation = '1s ease-in-out forwards sliders';
+    }
 });

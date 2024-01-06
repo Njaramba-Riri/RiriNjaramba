@@ -122,8 +122,8 @@
                                 {{ field(class_='text-area') }}
                             </div>
                             {% else %}
-                                <div class="submit">
-                                    <p>This is FRUSTRATING!!!!!</p>
+                                <div class="button">
+                                    {{ field(class_='submit') }}
                                     <ion-icon name="send-outline"></ion-icon>
                                 </div>
                             {% endif %}
@@ -133,26 +133,43 @@
             </div>
             <div class="socials">
                 <h2>You can reach me through: </h2>
+                <img src="{{ url_for('static', filename='images/riri.jpg')}}" alt="Riri Njaramba">
                 <div class="icons">
                     <a href="mailto: jamesriri03@gmail.com" target="_top">
                         <ion-icon name="mail-outline"></ion-icon>
-                        Send Email
+                        <span>Send Email</span>
+                    </a>
+                    <a href="tel:+254758630202">
+                        <ion-icon name="call-outline"></ion-icon>
+                        <span>+254 758-630-202</span>
                     </a>
                     <a href="https://linkedin.com/in/riri-njaramba/">
                         <ion-icon name="logo-linkedin"></ion-icon>
-                        LinkedIn
+                        <span>LinkedIn</span>
                     </a>                
                     <a href="https://twitter.com/icy_riri">
                         <ion-icon name="logo-twitter"></ion-icon>
-                        Twitter
+                        <span>Twitter</span>
                     </a>
                     <a href="https://medium.com/@jamesriri03">
                         <ion-icon name="logo-medium"></ion-icon>
-                        Medium
+                        <span>Medium</span>
                     </a>
                 </div>
             </div>            
         </div>
+        <div class="footer">
+            <hr>
+            <footer>
+                <div class="copy">
+                    <p>2024.All rights reserved&copy;</p>
+                </div>
+                <div class="heart">
+                    <p>Made with love by Riri</p>
+                    <p><ion-icon name="heart"></ion-icon></p>
+                </div>
+            </footer>             
+        </div>  
     </section>
 </div>
 {% endblock %}
