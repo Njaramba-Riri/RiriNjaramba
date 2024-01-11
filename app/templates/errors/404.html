@@ -1,10 +1,26 @@
 {% extends 'base.html' %}
 
-{% block title %}Not Found {% endblock %}
+{% block title %}Not Found - Riri Njaramba {% endblock %}
 
 {% block content %}
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
 <div class="error">
-    <h3>404, NOT FOUND.</h3>
-    <p>Ooops, the resource you are looking for could'nt be found.</p>
+    <div class="text">
+        <h3>404, NOT FOUND.</h3>
+        <p>Ooops, the resource you are looking for could'nt be found.</p>
+        <button onclick="goBack()" id="back">Go Back</button>
+    </div>
 </div>
+{% block js %}
+{{ super() }}
+<script>
+    const back  = document.getElementById("back");
+
+    function goBack(){
+        window.history.back()
+    }
+    
+</script>
+{% endblock %}
 {% endblock %}

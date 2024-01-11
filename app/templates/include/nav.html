@@ -1,0 +1,55 @@
+<header class="navigation" id="nav">
+    <div class="toggle">
+        <button class="button" id="menu-button" title="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <p id="home">Riri<span>Njaramba</p>
+    </div>
+    <div class="items">
+        <nav>
+            <ul>
+                <li><a href=""></span></a></li>
+                <li><a href="">Services</a></li>
+                <li><a href="">Projects</a></li>
+                <li><a href="">Blogs</a></li>
+                <li><a href="">Get a Quote</a></li>
+            </ul>
+        </nav>
+    </div>        
+</header>
+<script type="text/javascript">
+    const buttonMenu = document.querySelector("#menu-button");
+    const rootElement = document.documentElement;
+    const home = document.getElementById('home');
+
+    buttonMenu.addEventListener('click', (e) => {
+        rootElement.toggleAttribute('sidebar-open');
+    })
+    buttonMenu.addEventListener('mouseover', () =>{
+        this.title = 'Close'
+    })
+
+    home.addEventListener('click', () => {
+        window.location.href = "{{ url_for('mainapp.index') }}"
+    })
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav = document.querySelector("#nav");
+        const sidebar = document.querySelector("html[sidebar-open] ")
+
+        function updateNav(){
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20){
+                if (sidebar){
+                    nav.classList.remove('scrolled');
+                }else{
+                    nav.classList.add('scrolled');
+                }
+            }else{
+                nav.classList.remove('scrolled');
+            }
+        }
+        window.addEventListener('scroll', updateNav);
+    });
+</script>

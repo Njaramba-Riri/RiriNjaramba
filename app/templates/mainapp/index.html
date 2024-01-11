@@ -3,22 +3,35 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
 <div class="home">
     <section class="intro">
         <div class="hello">
-            <h1>Hello and welcome!.</h1>
-            <h3>I am James <span>Riri Njaramba</span>, a</h3>
-            <div class="title">
-                <h2><span>Data Scientist.</span></h2>
-                <p>Who will clean and work with your data to <span>derive insights</span>.</p>
+            <div class="greetings">
+                <div class="out">
+                    <h1>Hello and welcome!.</h1>
+                    <h3>I am James <span>Riri Njaramba</span>, a</h3>                      
+                </div>
+                <div class="titles">
+                    <div class="title">
+                        <h2><span>Data Scientist.</span></h2>
+                        <p>Who will clean and work with your data to <span>derive insights</span>.</p>
+                    </div>
+                    <div class="title">
+                        <h2><span>MLOps Engineer.</span></h2>
+                        <p>Who finds facination in <span>building and deploying</span> ML models to production.</p>
+                    </div>
+                    <div class="title">
+                        <h2><span>IT Support.</span></h2>
+                        <p>On my happy sunny days find me <span>bulding and maintaining</span> websites.</p>
+                    </div>                    
+                </div>
             </div>
-            <div class="title">
-                <h2><span>MLOps Engineer.</span></h2>
-                <p>Who finds facination in <span>building and deploying</span> ML models to production.</p>
-            </div>
-            <div class="title">
-                <h2><span>IT Support.</span></h2>
-                <p>On my happy sunny days find me <span>bulding and maintaining</span> websites.</p>
+            <div class="scroll">
+                <ion-icon name="chevron-down-outline"></ion-icon>
+                <ion-icon name="chevron-down-outline"></ion-icon>
+                <ion-icon name="chevron-down-outline"></ion-icon>
             </div>
         </div>
         <div class="me">
@@ -133,29 +146,52 @@
             </div>
             <div class="socials">
                 <h2>You can reach me through: </h2>
-                <img src="{{ url_for('static', filename='images/riri.jpg')}}" alt="Riri Njaramba">
-                <div class="icons">
-                    <a href="mailto: jamesriri03@gmail.com" target="_top">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        <span>Send Email</span>
-                    </a>
-                    <a href="tel:+254758630202">
-                        <ion-icon name="call-outline"></ion-icon>
-                        <span>+254 758-630-202</span>
-                    </a>
-                    <a href="https://linkedin.com/in/riri-njaramba/">
-                        <ion-icon name="logo-linkedin"></ion-icon>
-                        <span>LinkedIn</span>
-                    </a>                
-                    <a href="https://twitter.com/icy_riri">
-                        <ion-icon name="logo-twitter"></ion-icon>
-                        <span>Twitter</span>
-                    </a>
-                    <a href="https://medium.com/@jamesriri03">
-                        <ion-icon name="logo-medium"></ion-icon>
-                        <span>Medium</span>
-                    </a>
+                <div class="chat">
+                    <img src="{{ url_for('static', filename='images/riri.jpg')}}" alt="Riri Njaramba">
+                    <div class="email">
+                        <a href="mailto: jamesriri03@gmail.com" target="_top">
+                            <span>
+                                <ion-icon name="mail-outline"></ion-icon>
+                            </span>
+                            Email
+                        </a>                        
+                        <a href="tel:+254758630202">
+                            <span>
+                                <ion-icon name="call-outline"></ion-icon>
+                            </span>
+                            +254 758-630-202
+                        </a>                        
+                    </div>
                 </div>
+                <div class="mid">
+                    <p>OR</p>
+                </div>
+                <ul class="icons">
+                    <li>
+                        <a href="https://github.com/Njaramba-Riri">
+                            <ion-icon name="logo-github"></ion-icon>
+                            <span><ion-icon name="arrow-up-outline"></ion-icon></span>
+                        </a>                        
+                    </li>
+                    <li>
+                        <a href="https://linkedin.com/in/riri-njaramba/">
+                            <ion-icon name="logo-linkedin"></ion-icon>
+                            <span><ion-icon name="arrow-up-outline"></ion-icon></span>
+                        </a>                          
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/icy_riri">
+                            <ion-icon name="logo-twitter"></ion-icon>
+                            <span><ion-icon name="arrow-up-outline"></ion-icon></span>
+                        </a>                        
+                    </li>
+                    <li>
+                        <a href="https://medium.com/@jamesriri03">
+                            <ion-icon name="logo-medium"></ion-icon>
+                            <span><ion-icon name="arrow-up-outline"></ion-icon></span>
+                        </a>                        
+                    </li>
+                </ul>
             </div>            
         </div>
         <div class="footer">
