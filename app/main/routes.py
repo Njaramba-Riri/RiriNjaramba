@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, flash
 from .forms import FeedbackForm
+from .models import Feedback
 from app import db
 
 main_blueprint = Blueprint("mainapp", __name__,
