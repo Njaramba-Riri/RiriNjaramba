@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}RiriNjaramba | {% endblock %}</title>
+    <title>{% block title %} {{ title }} {% endblock %}</title>
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/riri.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"> 
@@ -28,6 +28,7 @@
         {% endblock %}
     {% endblock %}
     {% block scripts %}
+        <script src="{{ url_for('static', filename='js/main.js')}}"></script>
         <script src="{{ url_for('static', filename='js/vanilla-tilt.min.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

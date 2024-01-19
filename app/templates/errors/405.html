@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Not Allowed - Riri Njaramba {% endblock %}
+
+
+{% block content %}
+    {% include 'include/nav.html' %}
+    {% include 'include/sidebar.html' %}
+    <div class="error-405">
+        <div class="error">
+            <h3>Method Not Allowed.</h3>
+            <p></p>
+        </div>
+    </div>
+{% endblock %}

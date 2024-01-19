@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Blogs - Riri NJaramba {% endblock %}
+
+{% block content %}
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
+<div class="blogs" id="blogs">
+    <div class="items">
+        <div class="blog-search">
+            <h2>Blog posts.</h2>
+            <div class="text">
+                <input type="text" id="search-blog" placeholder="Search Posts.">
+                <ion-icon name="search-outline"></ion-icon>
+            </div>
+        </div>
+        <div class="posts">
+            <div class="blog">
+                <div class="header">
+                    <h3>Introduction to MLOps: Bridging the gap between Machine Learning and Operations.</h3>
+                </div>
+                <div class="blog-content">
+                    <h4>What Really is MLops?.</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -34,7 +34,39 @@ body{
     border-radius: 30px;
  }
 
-
+/* =================LOADER================= */
+#loader{
+    position: fixed;
+    background-color: var(--abyss);
+    inset: 0;
+    display: grid;
+    place-content: center;
+    z-index: -999;
+    transition: opacity .6s ease-in-out, visibility .6s ease-in-out;
+}
+#loader.hidden{
+    opacity: 0;
+    visibility: hidden;
+}
+.load h3{
+    color: var(--white);
+    margin-top: 20px;
+}
+.spinner{
+    width: 4rem;
+    height: 4rem;
+    border: .4rem solid var(--orange);
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: 2s ease-in-out infinite alternate spin;
+}
+@keyframes spin {
+    to{
+        transform: rotate(3turn) scale(1.2);
+    }
+    
+}
 /* ===============NavBar=============== */
 #sidebar {
     position: relative;
@@ -272,41 +304,53 @@ nav ul li:nth-child(1) span{
 }
 nav ul li{
     list-style: none;
-    margin: 0 1.5rem;
-    padding: .8rem;
+    margin: 0 2rem;
+    padding: .3rem;
     transition: padding-left 1s ease;
 }
 nav ul li:hover{
     padding-left: 2rem;
 }
-nav li a{
-    text-decoration: none !important;
-    padding: .06rem; 
+nav li a,
+nav li p{
+    text-decoration: none !important; 
     color: whitesmoke;
-    font-size: 1.2em;
+    font-size: 1em;
+    cursor: pointer;
     transition: padding-left 1s ease, color 1s ease;
 }
-nav li a:hover{
+nav li p{ 
+    text-align: center;
+    padding-top: .6rem;
+}
+nav li a:hover,
+nav li p:hover{
     color: #ffbf21;
 }
 nav ul li:last-child{
-    border-radius: 35% ;
+    border-radius: 40% ;
     border: 2px solid var(--pink);
     width: 150px;
-    padding-left: 1.5rem;
     transition: transform 1s ease, border-radius 1s ease-in-out, .5s border ease-in;
 }
 nav ul li:last-child:hover{
     transform: scale(.8);
     border-radius: 40%;
+    padding-left: none !important;
     border: 2px solid var(--orange);
 }
 
 
 /* ==============Home============ */
-.home{
+.home {
     background: var(--black);
-    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10%);
+}
+.home.visible{
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .6s ease-in-out, transform .6s ease-in-out;
 }
 .intro{
     position: relative;
@@ -630,6 +674,10 @@ nav ul li:last-child:hover{
     height: 100%;
     padding: 3rem 1rem;
 }
+.contact h2{
+    text-align: center;
+    color: var(--white);
+}
 .contact form{
     border: 2px solid var(--dark);
     border-radius: 20px;
@@ -898,8 +946,25 @@ form .submit:hover ion-icon{
     color: #f73d05;
     font-size: 20px;
 }
-
-
+/* ======================Blogs Page ======================= */
+.blogs{
+    background: var(--dark-blue);
+    height: 100%;
+    min-height: 100vh;
+    padding: 5rem 7rem;
+}
+.blogs .items{
+    background: var(--abyss);
+    height: 100%;
+    min-height: 80vh;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+}
+.blog-search{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 /*====================Error Pages =====================*/
 .error{
     background-image: linear-gradient(180deg, rgba(39, 39, 39, .5), var(--pink)), url('../images/404.jpg');

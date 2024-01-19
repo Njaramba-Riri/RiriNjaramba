@@ -17,6 +17,20 @@ def not_found(e):
         response.status_code = 404
     return render_template("/errors/404.html")
 
+def method_not_allowed(e):
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({
+            "Error": "Method Not Allowed."
+        })
+        response.status_code = 405
+    return render_template('errors/405.html')
+
+def internal_server_error(e):
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({
+            "Error": "An internal server error occured."
+        })
+    return render_template("errors/serverr.html")
 
 def create_app(object):
     app = Flask(__name__)
@@ -27,9 +41,13 @@ def create_app(object):
     cache.init_app(app)
 
     from .main import create_app as mainapp_create_module
+    from .blogs import create_app as blog_create_app
 
     mainapp_create_module(app)
+    blog_create_app(app)
 
     app.register_error_handler(404, not_found)
+    app.register_error_handler(404, method_not_allowed)
+    app.register_error_handler(500, internal_server_error)
 
     return app

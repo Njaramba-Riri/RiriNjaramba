@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %} Home {% endblock %}
+{% block title %} Home - Riri Njaramba {% endblock %}
 
 {% block content %}
+{% include 'include/loader.html' %}
 {% include 'include/nav.html' %}
 {% include 'include/sidebar.html' %}
 <div class="home">
@@ -38,7 +39,7 @@
             <img src="{{ url_for('static', filename='../static/images/riri.jpg')}}" alt="">
         </div>
     </section>
-    <section class="expertise">
+    <section class="expertise" id="services">
         <h1>My expertise lies within:</h1>
         <div class="flex">
             <div class="flex-card" data-tilt>
@@ -67,7 +68,7 @@
             </div>
         </div>
     </section>
-    <section class="projects">
+    <section class="projects" id="projects">
         <div class="main">
             <div class="pros">
                 <p>Having worked on various projects spanning from 
@@ -117,9 +118,10 @@
             </div>            
         </div>
     </section>
-    <section class="Njaramba">
+    <section class="Njaramba" id="contacts">
         <div class="more">
             <div class="contact">
+                <h2>Leave a messsage.</h2>
                 <form action="{{ url_for('mainapp.index') }}">
                     {{ form.hidden_tag }}
                     {% for field in form %}
