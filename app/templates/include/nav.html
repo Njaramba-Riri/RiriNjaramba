@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<header class="navigation" id="nav">
+<nav class="navigation" id="nav">
     <div class="toggle">
         <button class="button" id="menu-button" title="Menu">
             <span></span>
@@ -20,9 +20,9 @@
             </ul>
         </nav>
     </div>        
-</header>
+</nav>
 {% block js %}
-    {{ super() }}
+{{ scrip}}
     <script>
         const buttonMenu = document.querySelector("#menu-button");
         const rootElement = document.documentElement;
@@ -40,5 +40,5 @@
         });
 
     </script>
-{% endblock %}
+{% endblock js %}
 {% endblock %}

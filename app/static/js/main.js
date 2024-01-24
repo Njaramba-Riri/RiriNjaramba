@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     var content = document.querySelector(".home");
 
     window.addEventListener('load', () => {
-        if(content){
+        if(content && loader){
             loader.classList.add('hidden');
             content.classList.add('visible');
         }else{
@@ -27,7 +27,22 @@ document.addEventListener('DOMContentLoaded', () => {
             nav.classList.remove('scrolled');
         } 
     });
-    
+
+    const buttonMenu = document.querySelector("#menu-button");
+    const rootElement = document.documentElement;
+    const home = document.getElementById('home');
+
+    buttonMenu.addEventListener('click', (e) => {
+        rootElement.toggleAttribute('sidebar-open');
+    });
+    buttonMenu.addEventListener('mouseover', () =>{
+        this.title = 'Close'
+    });
+
+    home.addEventListener('click', () => {
+        window.location.href = "{{ url_for('mainapp.index') }}"
+    });
+
     var service = document.getElementById("service");
     var project = document.getElementById("project");
     var quote = document.getElementById("quote");
@@ -41,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     project.addEventListener('click', () => {
         let projects = document.getElementById("projects");
         if(projects){
-            projects.scrollIntoView({behavior: 'instant'});
+            projects.scrollIntoView({behavior: 'smooth'});
         }
     });
     quote.addEventListener('click', ()=>{
@@ -76,3 +91,13 @@ window.addEventListener('scroll', function(){
         contacts.style.animation = '1s ease-in-out forwards sliders';
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    var search = document.getElementById("search-blog");
+    let search_term = ''
+    
+    search.addEventListener('keyup', e => {
+        search_term = e.target.value;
+    })
+
+})

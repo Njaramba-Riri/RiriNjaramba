@@ -2,14 +2,22 @@
 
 {% block title %}Not Allowed - Riri Njaramba {% endblock %}
 
-
 {% block content %}
     {% include 'include/nav.html' %}
     {% include 'include/sidebar.html' %}
-    <div class="error-405">
-        <div class="error">
+    <div class="error">
+        <div class="text">
             <h3>Method Not Allowed.</h3>
-            <p></p>
+            <p>The requested resource requires your request to have</p>
+            <button onclick="goBack()" id="back">Go Back</button>
         </div>
     </div>
+    {% block js %}
+    {{ super() }}
+    <script>
+        function goBack(){
+            window.history.back()
+        }
+    </script>
+    {% endblock js %}
 {% endblock %}
