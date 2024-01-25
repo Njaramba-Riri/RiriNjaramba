@@ -15,43 +15,37 @@
             </div>
         </div>
         <div class="posts">
-            <div class="blog">
-                <div class="header">
-                    <h3>Introduction to MLOps: Bridging the gap between Machine Learning and Operations.</h3>
-                </div>
-                <div class="blog-content">
-                    <h4>What Really is MLops?.</h4>
-                    <p>Lorem ipsum, whatever there is will always be.</p>
-                    <div class="tags">
-                        <p class="tag" >Machine Learning</p>
-                        <p class="tag">Data Science</p>
-                        <p class="tag">MLOps</p>
+            <div class="blogs">
+                {% for blog in posts %}
+                    <div class="blog">
+                        <div class="header">
+                            <h3>{{blog.title}}</h3>
+                        </div>
+                        <div class="blog-content">
+                            <h4>What Really is MLops?.</h4>
+                            <p>
+                                {{blog.post | truncate(500)}} 
+                                <div class="more">
+                                    <a href="{{ url_for('.blog', title=blog.title) }}">Read More. </a>
+                                    <ion-icon name="arrow-forward-outline"></ion-icon> 
+                                </div>
+                            </p>
+                            <div class="tags">
+                                <p class="tag" >Machine Learning</p>
+                                <p class="tag">Data Science</p>
+                                <p class="tag">MLOps</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                {% endfor %}                
             </div>
-            <div class="blog">
-                <div class="header">
-                    <h3>Introduction to MLOps: Bridging the gap between Machine Learning and Operations.</h3>
-                </div>
-                <div class="blog-content">
-                    <h4>What Really is MLops?.</h4>
-                </div>
-            </div>
-            <div class="blog">
-                <div class="header">
-                    <h3>Introduction to MLOps: Bridging the gap between Machine Learning and Operations.</h3>
-                </div>
-                <div class="blog-content">
-                    <h4>What Really is MLops?.</h4>
-                </div>
-            </div>
-            <div class="blog">
-                <div class="header">
-                    <h3>Introduction to MLOps: Bridging the gap between Machine Learning and Operations.</h3>
-                </div>
-                <div class="blog-content">
-                    <h4>What Really is MLops?.</h4>
-                </div>
+            <div class="pagination">
+                {% if prev %}
+                    <a href="{{ prev }}">Prev</a>
+                {% endif %}                 
+                {% if next %}
+                    <a href="{{ next }}">Next</a>
+                {% endif %}
             </div>
         </div>
     </div>
