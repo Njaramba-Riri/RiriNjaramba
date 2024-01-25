@@ -1,4 +1,4 @@
-from flask_login import LoginManager
+from flask_login import LoginManager, AnonymousUserMixin
 from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt()
@@ -14,6 +14,10 @@ login.login_message_category = "info"
 def load_user(user_id):
     from .models import User
     user = User.query.get(user_id)
+
+class VisitorAnonymous(AnonymousUserMixin):
+    def __init__(self):
+        self.username = "Ariff"
 
 def create_app(app, **kwargs):
     """Creates and registers authentication blueprint int the main app.

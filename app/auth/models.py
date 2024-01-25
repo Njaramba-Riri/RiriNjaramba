@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
+from flask_login import AnonymousUserMixin
+import unicodedata
 
 from app import db
-from auth import bcrypt
+from . import bcrypt
 
 class User(db.Model):
     """Creates the user object db model in the data base.
@@ -22,3 +24,20 @@ class User(db.Model):
     
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
+    
+    @property
+    def is_authenticated(self):
+        if isinstance(self, AnonymousUserMixin):
+            return False
+        else:
+            return True
+        
+    @property
+    def is_anonymous(self):
+        if isinstance(self, AnonymousUserMixin):
+            return True
+        else:
+            return False
+        
+    def get_id(self):
+        return unicodedata(self.id)
