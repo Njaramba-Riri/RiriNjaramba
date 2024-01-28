@@ -3,6 +3,7 @@ env/
 __pycache__/
 config.py 
 .flaskenv
+*.env
 
 *.pyc
 .idea
@@ -11,7 +12,7 @@ config.py
 *.sql
 *.log
 *.sqlite
-
+*.db
 *.gz
 *.iso
 *.jar

@@ -1,36 +1,38 @@
-from flask_wtf import Form
+import re
+
+from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import RecaptchaField
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Email, Length, Optional, EqualTo
+from wtforms.validators import DataRequired, Email, Length, Optional, EqualTo, ValidationError
 
 from .models import User
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     """Creates user login form.
 
     Args:
         Form (_type_): Base class for all flask forms.
     """
     email = StringField("Enter Email: ", validators=[Email(), DataRequired()])
-    usename = StringField("Enter username: ", validators=[DataRequired()])
+    username = StringField("Enter username: ", validators=[DataRequired()])
     password = PasswordField("Enter Password: ", validators=[DataRequired()])
     remember = BooleanField("Remember Me", validators=[Optional()])
     login = SubmitField("Login")
 
-    def validate(self):
-        check_validate = super(LoginForm, self).validate()
+    def validate(self, extra_validators=None):
+        check_validate = super(LoginForm, self).validate(extra_validators)
         if not check_validate:
             return False
         user  = User.query.filter_by(username=self.username.data).first()
         if not user:
             self.username.errors.append("User with such username doesn't exist.")
             return False
-        if not self.user.check_password(self.password.data):
+        if not user.check_password(self.password.data):
             self.password.errors.append("Wrong password, try again.")
             return False
         return True 
     
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     """Creates user register form.
 
     Args:
@@ -40,14 +42,50 @@ class RegisterForm(Form):
     username = StringField('Enter Username', validators=[DataRequired(), Length(max=255)])
     password = PasswordField('Password: ', validators=[DataRequired(), Length(min=8) ])
     confirm = PasswordField('Confirm Password: ', validators=[DataRequired(), EqualTo('password')])
-    recaptcha = RecaptchaField()
+    #recaptcha = RecaptchaField()
+    register = SubmitField("Register")
     
-    def validate(self):
-        check_validate = super(RegisterForm, self).validate()
-        if not check_validate:
-            return False
-        user = User.query.filter_by(username=self.username.data).first()
-        if user:
-            self.username.errors.append("User with that name already exists")
-            return False
-        return True
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError("A user with that name already exists")
+        
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise ValidationError("Tha username is already in use, try another.")
+        
+    # def validate(self, extra_validators=None):
+    #     check_validate = super(RegisterForm, self).validate(extra_validators)
+    #     if not check_validate:
+    #         return False
+    #     user = User.query.filter_by(username=self.username.data).first()
+    #     if user:
+    #         self.username.errors.append("User with that name already exists")
+    #         return False
+    #     return True
+        
+class forgotPass(FlaskForm):
+    """Create a forgotten password form.
+
+    Args:
+        FlaskForm (any): Flask form.
+    """
+    email = StringField("Kindly enter your email.")
+    submit = SubmitField("Get reset instructions.")
+
+    def validate_email(self, field):
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", field.data):
+            raise ValidationError("Enter a valid email address.")
+        
+        if not User.query.filter_by(email=field.data).first():
+            raise ValidationError("User with such an email address doesn't exist yet.")
+        
+class resetPassword(FlaskForm):
+    """Create a password reset form fields.
+
+    Args:
+        FlaskForm (Any): Flask form instance.
+    """
+    password = PasswordField("New Password.", validators=[DataRequired(), Length(min=8, max=64)])
+    confirm = PasswordField("Confirm new password.", validators=[DataRequired(),
+                                                                 EqualTo('password', message="Both passoword fields must match.")])
+    submit = SubmitField("Send")

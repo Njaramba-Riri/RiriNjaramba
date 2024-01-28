@@ -1,14 +1,12 @@
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_mail import Mail
 from flask_caching import Cache
 from config import DevConfig
 
 db = SQLAlchemy()
 migrate = Migrate()
 cache = Cache()
-mail = Mail()
 
 def not_found(e):
     if request.accept_mimetypes.accept_json and \
@@ -17,7 +15,7 @@ def not_found(e):
             "Error": "Resource not found."
         })
         response.status_code = 404
-    return render_template("/errors/404.html")
+    return render_template("/errors/404.html"), 404
 
 def method_not_allowed(e):
     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
@@ -25,7 +23,7 @@ def method_not_allowed(e):
             "Error": "Method Not Allowed."
         })
         response.status_code = 405
-    return render_template('/errors/405.html')
+    return render_template('/errors/405.html'), 405
 
 def internal_server_error(e):
     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
@@ -33,7 +31,7 @@ def internal_server_error(e):
             "Error": "An internal server error occured."
         })
         response.status_code = 500
-    return render_template("errors/serverr.html")
+    return render_template("errors/serverr.html"), 500
 def create_app(object):
     app = Flask(__name__)
     app.config.from_object(DevConfig)
@@ -41,7 +39,6 @@ def create_app(object):
     db.init_app(app)
     migrate.init_app(app, db)
     cache.init_app(app)
-    mail.init_app(app)
 
     from .main import create_app as mainapp_create_module
     from .blogs import create_app as blog_create_app

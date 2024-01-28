@@ -1,1 +1,54 @@
-{% macro  %}
+{% macro  render(form) %}
+    {{ form.hidden_tag() }}
+    {% for field in form %}
+    {% if field.widget.type != 'hidden' %}
+    {% if field.type == 'StringField' %}
+        <div class="field">
+            {{ field.label(class_='label') }}
+            {{field(class_='input') }}
+            {% if field.name == 'email' %}
+                <ion-icon name="mail-outline"></ion-icon>
+            {% elif field.name == 'username' %}
+                <ion-icon name="person-outline"></ion-icon>
+            {% endif %}
+            {% if field.errors %}
+            {% for e in erros %}
+            <p class="help-block">{{e}}</p>
+            {% endfor %}
+            {% endif %}
+        </div>
+    {% elif field.type == 'PasswordField' %}
+        <div class="field">
+            {{ field.label(class_='label') }}
+            {{ field(class_='input') }}
+            <ion-icon name="eye-off-outline"></ion-icon>
+            {% if field.errors %}
+            {% for e in erros %}
+            <p class="help-block">{{e}}</p>
+            {% endfor %}
+            {% endif %}
+        </div>
+    {% elif field.type == 'TextAreaField' %}
+        <div class="input">
+            {{ field.label(class_='label') }}
+            {{ field(class_='text-area') }}
+            {% if field.errors %}
+            {% for e in erros %}
+            <p class="help-block">{{e}}</p>
+            {% endfor %}
+            {% endif %}
+        </div>
+    {% elif field.type == 'BooleanField' %}
+        <div class="remember">
+            {{ field }}
+            {{ field.label(class_='label') }}
+            <a href="{{ url_for('auth.forgotpass') }}">forgot password?</a>
+        </div>
+    {% elif field.type == 'SubmitField' %}
+        <div class="field">
+            {{ field(class_='submit')}}
+        </div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+{% endmacro %}

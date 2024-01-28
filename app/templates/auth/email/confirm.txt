@@ -1,0 +1,14 @@
+Greetings {{ user.username }},
+
+Welcome to my portifolio/blogging website.
+
+To confirm your account kindly click the following link:
+
+{{ url_for('auth.confirm', token=token, _external=True) }}
+
+
+Sincerely,
+Riri Njaramba
+
+
+Note: If you're having trouble accessing the website kindly don't shy away from reaching out to me through this same email. 

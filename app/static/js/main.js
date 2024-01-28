@@ -11,7 +11,37 @@ document.addEventListener('DOMContentLoaded', ()=>{
         }
     });   
 });
+document.addEventListener('DOMContentLoaded', (event) => {
+    var message = document.getElementById("messages");
+    var timer;
 
+    function startTimer(){
+        timer = setTimeout(function(){
+            if(message){
+                message.classList.add('clear');
+            }
+        }, 2000)
+    }
+
+    function stopTimer(){
+        clearTimeout(timer)
+    }
+
+    if(message){
+        message.addEventListener('mouseover', startTimer);
+        message.addEventListener('mouseout', startTimer)
+        message.addEventListener('click', function(){
+            stopTimer();
+            message.classList.add('clear');
+        });
+
+        startTimer();
+    }
+
+
+
+
+});
 document.addEventListener('DOMContentLoaded', () => {
     const nav = document.querySelector("#nav");
     const sidebar = document.querySelector("html[sidebar-open] ")

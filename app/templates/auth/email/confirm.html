@@ -1,0 +1,20 @@
+<p>Hello, {{ user.username }}</p>
+
+<p>Welcome to my portifolio/blogging website, I am genuinely happy to have you here.</p>
+
+<p>To confirm your acount kindly <a href="{{ url_for('auth.confirm', token=token, _external=True)}}">click here</a></p>.
+
+<p>Alternatively, you can copy and paste the following link into you browser's address bar: </p>
+
+<p>{{ url_for('auth.confirm', token=token, _external=True)}}"</p>
+
+<p>Sincerely,</p>
+
+<p><strong>Riri Njaramba</strong></p>
+
+<p>
+    <small>
+        Note: If you're having trouble accessing the website kindly don't shy away from reaching out to me through this same email
+    </small>
+</p>
+

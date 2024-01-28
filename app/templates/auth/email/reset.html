@@ -1,0 +1,22 @@
+<p>Hello, {{ user.username }}, </p>
+
+<p>
+    We've just recieved a request to reset your password,
+    kindly <a href="{{ url_for('auth.forgotPass', token=token, _external=True)}}"></a> 
+</p>
+
+<p>Alternatively, you can copy and paste the following link to your browser's address bar:
+    <a href="{{url_for('auth.forgotPass', token=token, _external=True)}}"></a>
+</p>
+
+<p>If you have not requested to reset your password kindly ignore this email.</p>
+
+<p>Sincerley,</p>
+<p>Riri Njaramba</p>
+
+<p>
+    <small>
+        Note: If you're having trouble accessing the website kindly don't shy away 
+        from reaching out to me through this same email
+    </small>
+</p>
