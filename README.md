@@ -28,4 +28,4 @@ While this is a personal project, I'm open to collaborations and contributions. 
 
 If you have any questions, feel free to contact me.
 
-Thank you for visiting my portfolio!
+Thank you for stopping by!.
