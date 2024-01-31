@@ -4,34 +4,10 @@
 {% block title %}Register - Riri Njaramba {% endblock %}
 
 {% block content %}
-{% include 'include/nav.html' %}
 <div class="auth">
     <div class="auth-form">
-        <form action="{{ url_for('.register') }}" method="post">
+        <form action="{{ url_for('.register') }}" method="post" id="auth">
             {{ macro.render(form) }}
-            <!-- {% for field in form %}
-            {% if field.type == 'StringField' %}
-                <div class="field">
-                    {{ field.label(class_='label') }}
-                    {{ field(class_='input') }}
-                    {% if field.erros %}
-                        {% for e in field.errors %}
-                            {{ e }}
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            {% elif field.type == 'PasswordField' %}
-                <div class="field">
-                    {{ field.label(class_='label') }}
-                    {{ field(class_='input') }}
-                    <ion-icon name="eye-off-outline"></ion-icon>
-                </div>
-            {% else %}
-                <div class="field">
-                    {{ field(class_='submit') }}
-                </div>
-            {% endif %}
-            {% endfor %} -->
             <div class="register">
                 <p>Already have an account? <a href="{{ url_for('.signin') }}">Log in</a></p>
             </div>

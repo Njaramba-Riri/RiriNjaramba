@@ -70,6 +70,7 @@ body{
 
 /* ==================Flash Msgs============= */
 .messages{
+    background: tomato;
     position: fixed;
     bottom: 0;
     right: 0;
@@ -79,6 +80,9 @@ body{
 .messages.clear{
     transform: translateX(300px);
     opacity: 0;
+}
+.help-block{
+    color: #f73d05;
 }
 /* ===============NavBar=============== */
 #sidebar {
@@ -289,7 +293,12 @@ a ion-icon{
     cursor: pointer;
     transition: color .7s ease;
 }
-.toggle p:hover{
+.toggle a{
+    color: wheat;
+    text-decoration: none !important;
+}
+.toggle p:hover,
+.toggle a:hover{
     color: whitesmoke;
 }
 .toggle p:hover span{
@@ -753,6 +762,8 @@ form .submit{
     box-shadow: none !important;
     background-color: var(--light-blue);
     color: #fff;
+    margin-top: 20px;
+    transition: background-color .6s ease-in-out;
 }
 form .submit:hover{
     background-color: seagreen;
@@ -1151,6 +1162,7 @@ form .submit:hover ion-icon{
 /* ======================Login Pages====================== */
 .auth{
     position: relative;
+    padding: 5rem;
     background-image: linear-gradient(45deg, rgba(34, 56, 68, .8)50%, rgba(34, 234, 123, .6)50%);
     min-height: 100vh;
     height: 100%;
@@ -1165,28 +1177,42 @@ form .submit:hover ion-icon{
 .auth form{
     background: rgba(231, 230, 230, .8);
     padding: 3rem;
+    min-height: 400px;
     z-index: 5;
 }
 form .field{
-    margin-top: 10px;
-}
-form .input{
     width: 100%;
     height: 40px;
     position: relative;
+    margin: 30px 0;
+}
+.field .input{
+    width: 100%;
+    height: 40px;
     outline: none;
     border: none;
     border-radius: 5px;
     padding-left: 5px;
 }
-form .label{
+.input.errors{
+    border: 2px solid red;
+}
+.field .label{
     margin: 0 !important;
 }
-form ion-icon{
+.field ion-icon,
+.field i{
     position: absolute;
-    right: 5%;
-    top: 50%;
+    right: 5px;
+    top: 70%;
+    font-size: 2rem;
     color: #ff5722;
+}
+.field ion-icon.active{
+    color: #df4bba;
+}
+.field .toggle-password{
+    cursor: pointer;
 }
 form .remember{
     display: flex;
@@ -1199,7 +1225,43 @@ form .remember{
     margin-left: auto;
 }
 .auth .register{
+    text-align: center;
+    position: fixed;
+    bottom: 0;
     margin-top: 30px;
+}
+
+.form .btn{
+    width: 100%;
+    margin-top: 4rem;
+}
+.btn .submit-btn{
+    background-color:transparent ;
+    padding: .2rem .8rem;
+    outline: none;
+    border: 2px solid var(--abyss);
+    border-radius: 30px;
+}
+.submit-btn:hover{
+    background-color: var(--abyss);
+    color: var(--white);
+    transform: scale(1.1);
+    transition: background-color .5s ease-in-out, transform .8s ease-in-out;
+}
+
+.auth .unconfirmed{
+    padding: 3rem;
+    background: rgba(231, 230, 230, .8);
+}
+.unconfirmed h1,
+.unconfirmed h3{
+    margin: 1rem 0;
+}
+.unconfirmed i{
+    color: var(--orange);
+}
+.unconfirmed .resend{
+    margin-top: 3rem;
 }
 /*====================Error Pages =====================*/
 .error{

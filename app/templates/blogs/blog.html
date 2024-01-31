@@ -26,33 +26,31 @@
             </div>
         </div>
     <div class="comment">
-                <div class="form">
-                    <h3>Want to leave a comment?.</h3>
-                    <form action="{{ url_for('.blog', title=blog.title)}}" method="post">
-                        {% for field in form %}
-                        {% if field.type == 'StringField' %}
-                            <div class="input">
-                                {{ field.label(class_='label') }}
-                                {{ field(class_='input-area') }}
-                            </div>
-                        {% elif field.type == 'TextAreaField' %}
-                            <div class="input">
-                                {{ field.label(class_='label') }}
-                                {{ field(class_='text-area') }}
-                            </div>
-                        {% elif field.type == 'RecaptchaField' %}
-                            <div class="captcha">
-                                {{ field(class_='captcha') }}
-                            </div>
-                        {% else %}
-                            {{ field (class_='submit') }}
-                        {% endif %}
-                        {% endfor %}
-                    </form>
-                </div>
-        </div>   
+        <div class="auth-form">
+            <h3>Want to leave a comment?.</h3>
+            <form action="{{ url_for('.blog', title=blog.title)}}" method="post">
+                {% for field in form %}
+                {% if field.type == 'StringField' %}
+                    <div class="input">
+                        {{ field.label(class_='label') }}
+                        {{ field(class_='input-area') }}
+                    </div>
+                {% elif field.type == 'TextAreaField' %}
+                    <div class="input">
+                        {{ field.label(class_='label') }}
+                        {{ field(class_='text-area') }}
+                    </div>
+                {% elif field.type == 'RecaptchaField' %}
+                    <div class="captcha">
+                        {{ field(class_='captcha') }}
+                    </div>
+                {% else %}
+                    {{ field (class_='submit') }}
+                {% endif %}
+                {% endfor %}
+            </form>
+        </div>  
     </div>
-  
 </div>
 {% block js %}
 {{ super() }}

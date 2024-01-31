@@ -2,11 +2,14 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_caching import Cache
+from flask_debugtoolbar import DebugToolbarExtension
+
 from config import DevConfig
 
 db = SQLAlchemy()
 migrate = Migrate()
 cache = Cache()
+debug = DebugToolbarExtension()
 
 def not_found(e):
     if request.accept_mimetypes.accept_json and \
@@ -39,6 +42,7 @@ def create_app(object):
     db.init_app(app)
     migrate.init_app(app, db)
     cache.init_app(app)
+    debug.init_app(app)
 
     from .main import create_app as mainapp_create_module
     from .blogs import create_app as blog_create_app

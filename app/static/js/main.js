@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         }
     });   
 });
+
 document.addEventListener('DOMContentLoaded', (event) => {
     var message = document.getElementById("messages");
     var timer;
@@ -37,11 +38,43 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         startTimer();
     }
-
-
-
-
 });
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    var passwordField = document.querySelectorAll(".password-field");
+    var togglePassword = document.querySelectorAll(".toggle-password");
+    var error = document.querySelectorAll(".errors");
+    var fields = document.querySelectorAll(".input");
+    var form  = document.getElementById('auth');
+
+    passwordField.forEach((field, index) => {
+        var toggle = togglePassword[index];
+
+        if(toggle){
+            toggle.addEventListener('click', function(){
+                if (field.type === 'password'){
+                    field.type = 'text';
+                    toggle.className = 'far fa-eye';
+                }else{
+                    field.type = 'password';
+                    toggle.className = 'far fa-eye-slash';
+                }
+            });
+        }
+    });
+
+    form.addEventListener('submit', function(e){
+        e.prevebtDefault();
+        if(error){
+            fields.forEach((field) => {
+                field.style.border = '2px solid red';
+            })
+        }else{
+            fields.classList.remove('errors');
+        }
+    });
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const nav = document.querySelector("#nav");
     const sidebar = document.querySelector("html[sidebar-open] ")

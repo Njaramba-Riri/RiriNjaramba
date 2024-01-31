@@ -1,7 +1,7 @@
-{% macro  render(form) %}
+{% macro render(form) %}
     {{ form.hidden_tag() }}
     {% for field in form %}
-    {% if field.widget.type != 'hidden' %}
+    {% if field.widget.input_type != 'hidden' %}
     {% if field.type == 'StringField' %}
         <div class="field">
             {{ field.label(class_='label') }}
@@ -11,19 +11,20 @@
             {% elif field.name == 'username' %}
                 <ion-icon name="person-outline"></ion-icon>
             {% endif %}
-            {% if field.errors %}
-            {% for e in erros %}
-            <p class="help-block">{{e}}</p>
-            {% endfor %}
+                {% if field.errors %}
+                {% for e in field.errors %}
+                <p class="help-block errors">{{ e }}</p>
+                {% endfor %}
             {% endif %}
         </div>
     {% elif field.type == 'PasswordField' %}
         <div class="field">
             {{ field.label(class_='label') }}
-            {{ field(class_='input') }}
-            <ion-icon name="eye-off-outline"></ion-icon>
+            {{ field(class_='input password-field') }}
+            <i class="fa fa-eye-slash toggle-password"></i>
+            <!-- <ion-icon name="eye-off-outline" class="toggle-password"></ion-icon> -->
             {% if field.errors %}
-            {% for e in erros %}
+            {% for e in field.errors %}
             <p class="help-block">{{e}}</p>
             {% endfor %}
             {% endif %}
@@ -33,7 +34,7 @@
             {{ field.label(class_='label') }}
             {{ field(class_='text-area') }}
             {% if field.errors %}
-            {% for e in erros %}
+            {% for e in field.erros %}
             <p class="help-block">{{e}}</p>
             {% endfor %}
             {% endif %}

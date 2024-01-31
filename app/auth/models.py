@@ -1,14 +1,14 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
+from time import time
 import jwt
 
 from flask import current_app
-from flask_login import AnonymousUserMixin
-
+from flask_login import AnonymousUserMixin, UserMixin
 
 from app import db
 from . import bcrypt
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     """Creates the user object db model in the data base.
 
     Args:
@@ -43,7 +43,8 @@ class User(db.Model):
         confirm_token = jwt.encode(
             {
                 "confirm_id": self.id,
-                "expiration": datetime.now(timezone.utc) + timedelta(seconds=expiration)
+                "expiration": (datetime.now(tz=timezone.utc) +
+                                timedelta(seconds=expiration)).isoformat()
             },
             current_app.config['SECRET_KEY'],
             algorithm="HS256"
@@ -63,7 +64,7 @@ class User(db.Model):
             token_data = jwt.decode(
                 token,
                 current_app.config['SECRET_KEY'],
-                leeway=timedelta(seconds=2000),
+                leeway=datetime(seconds=2000).fromisoformat(),
                 algorithms=['HS256']
             )
         except:
@@ -86,7 +87,7 @@ class User(db.Model):
         token = jwt.encode(
             {
                 "reset_id": self.id,
-                "expiration": datetime.now(timezone.utc) + expiration
+                "expiration": time() + expiration
             },
             current_app.config['SECRET_KEY'],
             algorithm='HS256'            
@@ -123,7 +124,7 @@ class User(db.Model):
         Returns:
             _type_: _description_
         """
-        self.last_seen = datetime.now(timezone.utc)
+        self.last_seen = datetime.now(datetime.timezone.utc)
         db.session.add(self)
 
     @property

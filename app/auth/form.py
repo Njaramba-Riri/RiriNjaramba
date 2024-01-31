@@ -38,30 +38,21 @@ class RegisterForm(FlaskForm):
     Args:
         Form: An instance of flask form.
     """
-    email = StringField('Enter Email: ', validators=[DataRequired(), Email()])
-    username = StringField('Enter Username', validators=[DataRequired(), Length(max=255)])
-    password = PasswordField('Password: ', validators=[DataRequired(), Length(min=8) ])
-    confirm = PasswordField('Confirm Password: ', validators=[DataRequired(), EqualTo('password')])
+    email = StringField('Enter Email.', validators=[DataRequired(), Email()])
+    username = StringField('Enter Preferred Username.', validators=[DataRequired(), Length(max=255)])
+    password = PasswordField('Password. ', validators=[DataRequired(), Length(min=8) ])
+    confirm = PasswordField('Confirm Password. ', validators=[DataRequired(), EqualTo('password', 
+                                                                                      message="Both password and confirm password fields must match.")])
     #recaptcha = RecaptchaField()
     register = SubmitField("Register")
     
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
-            raise ValidationError("A user with that name already exists")
+            raise ValidationError("A user with that email already exists.")
         
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
-            raise ValidationError("Tha username is already in use, try another.")
-        
-    # def validate(self, extra_validators=None):
-    #     check_validate = super(RegisterForm, self).validate(extra_validators)
-    #     if not check_validate:
-    #         return False
-    #     user = User.query.filter_by(username=self.username.data).first()
-    #     if user:
-    #         self.username.errors.append("User with that name already exists")
-    #         return False
-    #     return True
+            raise ValidationError("Username is already in use, try another.")
         
 class forgotPass(FlaskForm):
     """Create a forgotten password form.
@@ -69,12 +60,12 @@ class forgotPass(FlaskForm):
     Args:
         FlaskForm (any): Flask form.
     """
-    email = StringField("Kindly enter your email.")
-    submit = SubmitField("Get reset instructions.")
+    email = StringField("Kindly enter your email.", validators=[DataRequired(), 
+                                                                Email(message="Weka valid email address bana.")])
 
     def validate_email(self, field):
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", field.data):
-            raise ValidationError("Enter a valid email address.")
+        # if not re.match(r"[^@]+@[^@]+\.[^@]+", field.data):
+        #     raise ValidationError("Enter a valid email address.")
         
         if not User.query.filter_by(email=field.data).first():
             raise ValidationError("User with such an email address doesn't exist yet.")

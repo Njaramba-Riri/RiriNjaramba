@@ -4,7 +4,7 @@ We have just received a request to reset your password,
 
 kindly click the following link to reset it:
 
-{{ url_for('auth.forgotPass', token=token, _external=True) }}
+{{url_for('auth.password_reset', token=toke, _external=True)}}
 
 
 If you have not made this request, kindly ignore this email. 

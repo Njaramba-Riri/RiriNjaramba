@@ -20,7 +20,7 @@ def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
 
-def send_email(to, subject, template, **kwargs):
+def send_email(to: str, subject: str, template: str, **kwargs):
     """Sends an email asynchronously using flask-Mail.
 
     Args:
@@ -39,7 +39,7 @@ def send_email(to, subject, template, **kwargs):
     message.body = render_template(template + '.txt', **kwargs)
     message.html = render_template(template + '.html', **kwargs)
     thread = Thread(target=send_async_email, args=[app, message])
-    thread.daemon(True)
+    thread.setDaemon(True)
     thread.start()
     return thread
 

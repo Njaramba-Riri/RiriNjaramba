@@ -4,12 +4,23 @@
 {% block title %}Forgot Password - Riri Njaramba {% endblock %}
 
 {% block content %}
+{% include 'include/nav.html' %}
 <div class="auth">
     <div class="auth-form">
-        <form action="{{ url_for('.forgotpass') }}">
+        <form class="form" action="{{ url_for('.forgotpass') }}" method="post">
             {{ macro.render(form) }}
-            <div class="">
-                
+            <div class="btn">
+                <button type="submit" id="btn" class="submit-btn">
+                    <span class="btn-text">Get Reset Instructions</span>
+                    <div class="btn-loader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </button>
+            </div>
+            <div class="register">
+                <p>Take me to <a href="{{ url_for('.signin')}}">Login </a>instead.</p>
             </div>
         </form>
     </div>
