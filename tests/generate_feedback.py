@@ -4,7 +4,7 @@ import random
 from faker import Faker
 
 from app import db
-from app.blogs.models import Posts, Tag, Comments
+from app.blogs.models import Posts, Tag, Comments, CommentReply
 from app.main.models import Feedback
 
 logging.basicConfig(format=("%(asctime)s:%(name)s:%(levelname)s:%(message)s"))
@@ -49,7 +49,7 @@ def generate_comment(n: int) -> db.Model:
         db.Model: Instance of sqlalchemy database model.
     """
     comments = list()
-    for _ in range(n):
+    for i in range(n):
         comment = Comments()
 
         comment.email = fake.email()
@@ -67,7 +67,36 @@ def generate_comment(n: int) -> db.Model:
             db.session.rollback()
     return comments
 
-def generate_blogs(n: int, tags: list, comments: list) -> db.Model:
+def generate_comment_replies(n: int, comment: list) -> db.Model:
+    """Generates replies on the comments made to the blog. 
+
+    Args:
+        n (int): Number of replies to generate.
+
+    Returns:
+        db.Model: Replies db model. 
+    """
+    replies = list()
+    for i in range(n):
+        reply = CommentReply()
+
+        reply.reply = fake.text()
+        reply.date = fake.date_this_decade(before_today=True, after_today=False)
+        reply.comment_id = comment[random.randrange(0, len(comment))].comment.id
+
+        try:
+            db.session.add(reply)
+            db.session.commit()
+            replies.append(reply)
+        except Exception as e:
+            log.error("Fail to add reply %s: %s" % (str(reply), e))
+            db.session.rollback()
+
+    return replies
+
+
+
+def generate_blogs(n: int, tags: list, comments: list, replies: list) -> db.Model:
     """Generates fake blog posts.
 
     Args:
@@ -77,14 +106,14 @@ def generate_blogs(n: int, tags: list, comments: list) -> db.Model:
         db.Model: An instance of sqlalchemy database model.
     """
     posts = list()
-    for _ in range(n):
+    for i in range(n):
         post = Posts()
 
         post.post_author = "Riri Njaramba"
         post.title = fake.sentence()
-        post.post = fake.text(max_nb_chars=2000)
-        #post.tags = [tags[random.randrange(0, 10)] for i in range(0, 2)]
-        #post.comment = comments[random.randrange(0, 30)].comment
+        post.post = fake.text(max_nb_chars=5000)
+        post.tags = [tags[random.randrange(0, 10)] for i in range(0, 2)]
+        post.comment = comments[random.randrange(0, 30)].comment
         post.updated = fake.boolean()
         post.date_created = fake.date_this_decade(before_today=True, after_today=False)
         post.date_updated = fake.date_this_decade(before_today=True, after_today=False)
@@ -96,7 +125,6 @@ def generate_blogs(n: int, tags: list, comments: list) -> db.Model:
         except Exception as e:
             log.error("Error while creating blog posts: {}".format(e))
             db.session.rollback()
-
 
 def generate_feed(n: int) -> db.Model:
     """Generates fake feedback.

@@ -39,6 +39,7 @@ class Tag(db.Model):
     Args:
         db (sa.Model): Base class for all models.
     """
+
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
 
@@ -64,5 +65,21 @@ class Comments(db.Model):
     date = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
     blog_id = db.Column(db.Integer(), db.ForeignKey('Blogs.post_id'))
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "<comment: {}>".format(self.comment[:15])
+    
+class CommentReply(db.Model):
+    """Comments replies db representation.
+
+    Args:
+        db (SQLALCHEMY): Base class for all db models. 
+    """
+    __tablename__ = "comment_reply"
+
+    reply_id = db.Column(db.Integer(), primary_key=True)
+    reply = db.Column(db.Text(), nullable=False)
+    date = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
+    comment_id = db.Column(db.Integer(), db.ForeignKey('Blog Comments.id'))
+
+    def __repr__(self):
+        return '<Reply: {}'.format(self.reply)

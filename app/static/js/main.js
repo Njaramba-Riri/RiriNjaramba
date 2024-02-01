@@ -163,4 +163,20 @@ document.addEventListener("DOMContentLoaded", () => {
         search_term = e.target.value;
     })
 
-})
+});
+document.addEventListener("DOMContentLoaded", (event) => {
+    var open_reply = document.querySelectorAll(".open-reply");
+    var reply = document.querySelectorAll(".reply-comment");
+
+    open_reply.forEach((button, index) => {
+        button.addEventListener('click', function(){
+            // Close all replies
+            reply.forEach((reply) => {
+                reply.classList.remove('active');
+            });
+
+            // Open the specific reply
+            reply[index].classList.toggle('active');
+        });
+    });
+});

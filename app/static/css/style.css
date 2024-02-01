@@ -974,7 +974,7 @@ form .submit:hover ion-icon{
     background: var(--dark-blue);
     height: 100%;
     min-height: 100vh;
-    padding: 5rem 7rem;
+    padding: 5rem;
 }
 .blogs .items{
     background: var(--abyss);
@@ -1121,10 +1121,10 @@ form .submit:hover ion-icon{
     background: var(--dark-blue);
     height: 100%;
     min-height: 100vh;
-    padding: 5rem 10rem;
+    padding: 5rem;
 }
 .blogs-page .items{
-    background-color: var(--dark-blue);
+    background-color: var(--abyss);
     border-radius: 10px;
     height: 100%;
     min-height: 80vh;
@@ -1135,13 +1135,168 @@ form .submit:hover ion-icon{
     padding: 2rem;
 }
 .blogs-page .blog-content{
-    padding-left: 10px;
+    padding-top: 2rem;
+    padding-left: 1rem;
 }
-.blogs-page .comment{
+.items .comments{
     background-color: var(--abyss);
     padding: 1rem 5rem;
 }
-.form form{
+.comments .blog-comment{
+    color: #dad9d9;
+    border-radius: .6rem;
+    box-shadow: none;
+    padding: 1rem .5rem;
+    margin: 2rem 0;
+    opacity: .7;
+    transition: border .2s ease-in-out, box-shadow .5s ease-in-out;
+}
+.comments .blog-comment:hover{
+    border: 1px solid turquoise;
+    border-bottom: none;
+    opacity: 1;
+    box-shadow: 0 .7rem var(--orange);
+}
+.comments h3{
+    color: var(--white);
+}
+.comments .go-comment{
+    padding: 1rem 2rem;
+}
+.go-comment p{
+    font-size: 20px;
+    font-style: italic;
+    color: var(--white);
+}
+.go-comment i{
+    font-size: 25px;
+    color: var(--orange);
+    animation: 3s ease infinite alternate down;
+}
+@keyframes down {
+    0%, 40%{
+        transform: translateY(0);
+    }
+    100%{
+        transform: translateY( 50px);
+    }
+}
+.blog-comment .author{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+.blog-comment .name span,
+.blog-comment .date span{
+    color: wheat;
+    font-style: italic;
+}
+.blog-comment .discussion{
+    margin: .5rem;
+}
+.blog-comment .discussion p{
+    color: var(--blue);
+    cursor: pointer;
+}
+.discussion .reply-comment{
+    width: 100%;
+    height: 0;
+    margin: .5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .6s ease-in-out, visibility .4s ease-in-out;
+}
+.discussion .reply-comment.active{
+    height: auto;
+    opacity: 1;
+    visibility: visible;
+}
+.reply-comment .reply-fields{
+    /* display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; */
+    /* background: turquoise; */
+}
+.reply-comment .text-area{
+    width: 80%;
+    min-height: 5rem;
+    max-height: 20rem;
+    padding: .5rem;
+    background-color: rgba(255, 255, 255, .8);
+    border-radius: .4rem;
+    border: 1px solid var(--white);
+    outline: none;
+}
+.reply-comment .reply-btn{
+    width: 5rem;
+    border: none;
+    border-radius: .4rem;
+    outline: none;
+    color: #100319;
+    background-color: #dad9d9;
+    margin: .7rem 0;
+    transition: background-color .6s ease, color .4s ease;
+}
+.reply-comment .reply-btn:hover{
+    background-color: var(--blue);
+    color: wheat;
+}
+.comments .pagination{
+    text-align: center;
+}
+.comment{
+    height: 100%;
+    padding: 5rem;
+}
+.comment .comment-form{
+    background: rgba(255, 255, 255, .2);
+    padding: 1rem;
+    height: 100% !important;
+}
+.comment-form h3{
+    text-align: center;
+    color: var(--white);
+}
+.comment-form form{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    height: 100%;
+}
+.comment-form .field .label{
+    color: wheat;
+}
+.comment-form .input-area{
+    outline:  none;
+    width: 70%;
+    height: 40px;
+    padding: 0rem .5rem;
+    color: #dad9d9;
+    border: none;
+    border-bottom: 1px solid #f73d05;
+    background: transparent;
+    border-radius: .4rem;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    transition: background-color 50000s ease-in-out 0s;
+    -webkit-text-fill-color: #ff843f !important;
+}
+
+.comment-form .text-area{
+    width: 100%;
+    min-height: 5rem;
+    height: 100%;
+    max-height: 20rem;
+    padding: .2rem .5rem;
+    outline:  none;
+    border: none;
+    border-radius: .4rem;
+}
+/* .form form{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 1rem;
@@ -1158,7 +1313,7 @@ form .submit:hover ion-icon{
     width: 40px;
     margin-top: 10%;
 
-}
+} */
 /* ======================Login Pages====================== */
 .auth{
     position: relative;

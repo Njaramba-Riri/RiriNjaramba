@@ -25,36 +25,112 @@
                 </p>
             </div>
         </div>
-    <div class="comment">
-        <div class="auth-form">
-            <h3>Want to leave a comment?.</h3>
-            <form action="{{ url_for('.blog', title=blog.title)}}" method="post">
-                {% for field in form %}
-                {% if field.type == 'StringField' %}
-                    <div class="input">
-                        {{ field.label(class_='label') }}
-                        {{ field(class_='input-area') }}
+        <div class="comments">
+            <h3>Blog comments.</h3>
+            {% if comments | length == 0 %}
+                <div class="go-comment">
+                    <p>This post is yet to get any comments.</p>
+                    <p>Be the first one to leave a comment. <i class="fa-solid fa-hand-point-down"></i></p>                
+                </div>
+            {% endif %}
+            {% for comment in comments %}
+            <div class="blog-comment">
+                <div class="author">
+                    <div class="name">
+                        <p><span>{{ comment.name }}</span></p>
+                    </div>                    
+                    <div class="date">
+                        <p>on <span>{{ comment.date.strftime('%d-%m-%Y') }}</span>, said:</p>
+                    </div>                    
+                </div>
+                <div class="authored">
+                    <div class="reply">
+                        {{ comment.comment }}
                     </div>
-                {% elif field.type == 'TextAreaField' %}
-                    <div class="input">
-                        {{ field.label(class_='label') }}
-                        {{ field(class_='text-area') }}
+                    <div class="replies">
+                        {% for reply in replies %}
+                            {% if reply.comment_id == comment.id %}
+                            {{ reply.reply }}
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                {% elif field.type == 'RecaptchaField' %}
-                    <div class="captcha">
-                        {{ field(class_='captcha') }}
+                </div>   
+                <div class="discussion">
+                    <div class="reply">
+                        {% if current_user.is_anonymous %}
+                            <p class="open-reply" title="Sign in so you can reply to {{ comment.name }}">Sign in to reply.</p>
+                        {% else %}
+                            <p class="open-reply" title="Reply to {{ comment.name }}.">Open discussion.</p>
+                        {% endif %}
                     </div>
-                {% else %}
-                    {{ field (class_='submit') }}
+                    <div class="reply-comment">
+                       <form action="{{ url_for('blogs.blog', title=blog.title) }}" method="post">
+                            <!-- {{ reply.hidden_tag() }} -->
+                            {% for field in reply %}
+                                <div class="reply-fields">
+                                    {% if field.type == 'HiddenField' %}
+                                        {{ field(value=comment.id) }}
+                                    {% elif field.type == 'TextAreaField' %}
+                                        <div class="actual">
+                                            {{ field(class_='text-area', placeholder=field.label.text) }}
+                                        </div>
+                                    {% else %}
+                                        <div class="">
+                                            {{ field(class_='reply-btn') }}
+                                        </div>
+                                    {% endif %}                                    
+                                </div>
+                            {% endfor %}
+                       </form>
+                    </div>
+                </div>             
+            </div>
+            {% endfor %}
+            <div class="pagination">
+                {% if prev %}
+                    <a href="{{ prev }}">Prev <i class="far fa-caret"></i></a>
+                {% endif %}                 
+                {% if next %}
+                    <a href="{{ next }}">Next</a>
                 {% endif %}
-                {% endfor %}
-            </form>
-        </div>  
+            </div>
+        </div>
+        <div class="comment">
+            <div class="comment-form">
+                <h3>Want to leave a comment?.</h3>
+                <form action="{{ url_for('.blog', title=blog.title)}}" method="post">
+                    {% for field in form %}
+                    {% if field.type == 'StringField' %}
+                        <div class="field">
+                            {{ field.label(class_='label') }}
+                            {{ field(class_='input-area', autofill='none') }}
+                            {% if field.errors %}
+                                {% for e in field.errors %}
+                                <p class="help-block">{{ e }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% elif field.type == 'TextAreaField' %}
+                        <div class="field">
+                            {{ field.label(class_='label') }}
+                            {{ field(class_='text-area') }}
+                        </div>
+                    {% elif field.type == 'RecaptchaField' %}
+                        <div class="captcha">
+                            {{ field(class_='captcha') }}
+                        </div>
+                    {% else %}
+                        {{ field (class_='submit') }}
+                    {% endif %}
+                    {% endfor %}
+                </form>
+            </div>              
+        </div>
     </div>
 </div>
 {% block js %}
 {{ super() }}
-<script>
+<script type="text/javascript">
     function goBack(){
         window.history.back()
     }
