@@ -17,10 +17,10 @@
                 <li id="project"><p>Projects</p></li>
                 <li><a href="{{ url_for('blogs.blog_index') }}">Blogs</a></li>
                 <li id="quote"><p>Get a Quote</p></li>
-                {%  if current_user.is_anonymous %}
-                    <li id="account?"><a href="{{ url_for('auth.signin') }}">Login</a></li>
+                {%  if current_user.is_authenticated %}
+                    <li id="account?"><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                 {% else %}
-                    <li id="account"><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    <li id="account"><a href="{{ url_for('auth.signin') }}">Login</a></li>
                 {% endif %}
             </ul>
         </nav>

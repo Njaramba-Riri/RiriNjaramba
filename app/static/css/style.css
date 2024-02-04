@@ -1164,8 +1164,9 @@ form .submit:hover ion-icon{
     padding: 1rem 2rem;
 }
 .go-comment p{
-    font-size: 20px;
+    font-size: 17px;
     font-style: italic;
+    opacity: .5;
     color: var(--white);
 }
 .go-comment i{

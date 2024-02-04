@@ -14,7 +14,6 @@ class LoginForm(FlaskForm):
         Form (_type_): Base class for all flask forms.
     """
     email = StringField("Enter Email: ", validators=[Email(), DataRequired()])
-    username = StringField("Enter username: ", validators=[DataRequired()])
     password = PasswordField("Enter Password: ", validators=[DataRequired()])
     remember = BooleanField("Remember Me", validators=[Optional()])
     login = SubmitField("Login")
@@ -23,9 +22,9 @@ class LoginForm(FlaskForm):
         check_validate = super(LoginForm, self).validate(extra_validators)
         if not check_validate:
             return False
-        user  = User.query.filter_by(username=self.username.data).first()
+        user  = User.query.filter_by(email=self.email.data.lower()).first()
         if not user:
-            self.username.errors.append("User with such username doesn't exist.")
+            self.email.errors.append("User with such email doesn't exist.")
             return False
         if not user.check_password(self.password.data):
             self.password.errors.append("Wrong password, try again.")

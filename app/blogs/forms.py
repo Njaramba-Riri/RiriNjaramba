@@ -3,6 +3,12 @@ from flask_wtf.recaptcha import RecaptchaField
 from wtforms import StringField, SubmitField, TextAreaField, HiddenField
 from wtforms.validators import Email, DataRequired, Optional, Length
 
+
+class BlogPost(FlaskForm):
+    title = StringField("Blog title", validators=[DataRequired()])
+    body = TextAreaField("What is on your mind?", validators=[DataRequired()])
+    submit = SubmitField("submit")
+
 class CommentForm(FlaskForm):
     """Defines the form rendered on blog page for user comments.
 

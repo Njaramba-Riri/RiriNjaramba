@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, redirect, request, flash
+from flask import Blueprint, render_template, redirect, request, flash, abort
+from flask_login import login_required
 from .forms import FeedbackForm
 from .models import Feedback
+from ..auth.models import User
 from app import db
 
 main_blueprint = Blueprint("mainapp", __name__,
@@ -23,3 +25,11 @@ def index():
             db.session.rollback()
             flash("Something didn't go right, kindly try again.")
     return render_template('/mainapp/index.html', form=form)
+
+
+@main_blueprint.route("/user/<string:username>/")
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    if not user:
+        abort(404)
+    return render_template("/users/user.html", user=user)

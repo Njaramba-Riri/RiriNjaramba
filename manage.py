@@ -10,3 +10,4 @@ app = create_app('config.%sConfig' % env.capitalize())
 @app.shell_context_processor
 def make_shell_context():
     return dict(application=app, database=db, feed_model=Feedback, posts_model=Posts, db_migrate=migrate)
+

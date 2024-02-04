@@ -7,16 +7,20 @@ logging.getLogger().setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 from flask import Blueprint, render_template, url_for, request, flash, redirect
+from flask_login import current_user
 from sqlalchemy import exc
 
 from app import db
 from .models import Posts, Comments, CommentReply, Tag
-from .forms import CommentForm, replyCommentForm
+from .forms import BlogPost, CommentForm, replyCommentForm
+from ..auth import permission_required, admin_required 
+from ..auth.models import Permission
 
 blog_blueprint = Blueprint("blogs", __name__, static_folder="/blogs/static",
                            template_folder="/templates/blogs", url_prefix="/RiriNjaramba/blogs/")
 
 @blog_blueprint.route('/', methods=['GET', 'POST'])
+@admin_required
 def blog_index():
     page = request.args.get('page', 1, type=int)
     posts = Posts.query.order_by(Posts.date_created.desc())
@@ -25,8 +29,13 @@ def blog_index():
     prev_url = url_for('blogs.blog_index', page=blogs.prev_num) if blogs.has_prev else None
     tag = Tag.query.all()
     tags = random.sample(tag, 3)
+    form = BlogPost()
+    if current_user.can(Permission.WRITE_ARTICLE) and form.validate_on_submit():
+        post = Posts(title=form.title.data, post=form.body.data, author=current_user._get_current_object())
+        db.session.add(post)
+        return redirect(url_for('blog', title=post.title))
     return render_template("blogs/index.html", posts=blogs.items,tags=tags,
-                           next=next_url, prev=prev_url)
+                           next=next_url, prev=prev_url, form=form, permission=Permission)
  
 @blog_blueprint.route("/<string:title>", methods=["POST", "GET"])
 def blog(title):

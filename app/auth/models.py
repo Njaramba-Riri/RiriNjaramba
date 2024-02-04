@@ -1,12 +1,55 @@
-from datetime import datetime, timedelta, timezone
+import datetime
 from time import time
-import jwt
+import hashlib
 
-from flask import current_app
-from flask_login import AnonymousUserMixin, UserMixin
+import jwt
+from flask import current_app, request, has_request_context
+from flask_login import AnonymousUserMixin, UserMixin, login_manager
 
 from app import db
 from . import bcrypt
+
+
+class Permission:
+    COMMENT = 0x02
+    WRITE_ARTICLE = 0x04
+    MODERATE_COMMENTS = 0X08
+    ADMINISTER = 0x80
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(64), unique=True, index=True)
+    default = db.Column(db.Boolean(), default=False, index=True)
+    permissions = db.Column(db.Integer())
+    users = db.relationship('User', backref='role', lazy='dynamic')
+
+    @staticmethod
+    def insert_roles():
+        roles  = {
+            'User': (Permission.COMMENT |
+                     Permission.WRITE_ARTICLE, True),
+            'Moderator': (Permission.COMMENT |
+                          Permission.MODERATE_COMMENTS |
+                          Permission.WRITE_ARTICLE, False),
+            'Administrator': (0xff, False)
+        }
+
+        for r in roles:
+            role = Role.query.filter_by(name=r).first()
+            if role is None:
+                role = Role(name=r)
+            role.permissions = roles[r][0]
+            role.default = roles[r][1]
+            db.session.add(role)
+        db.session.commit()
+
+        
+
+    def __repr__(self) -> str:
+        return 'Role: {}'.format(self.name)
+
 
 class User(UserMixin, db.Model):
     """Creates the user object db model in the data base.
@@ -14,24 +57,50 @@ class User(UserMixin, db.Model):
     Args:
         db (_type_): Base class for all models.
     """
-    __tablename__ = "Users"
+    __tablename__ = "users"
 
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     confirmed = db.Column(db.Boolean(), default=False)
-    created = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
-    last_seen = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
+    avatar_hash = db.Column(db.String(64))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id'))
+    created = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
+    last_seen = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
+    posts = db.relationship('Posts', backref='author', lazy='dynamic')
+    
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.role is None:
+            if self.email == current_app.config["ADMIN"]:
+                self.confirmed = True
+                self.role = Role.query.filter_by(name="Administrator").first()
+            if self.role is None:
+                self.role = Role.query.filter_by(default=True).first()
+
+        if self.email is not None and self.avatar_hash is None:
+            self.avatar_hash = hashlib.md5(
+                self.email.encode('utf-8')
+            ).hexdigest()
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password) 
     
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
-    
 
-    def generate_confirmation_token(self, expiration=3000):
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        if has_request_context() and request.is_secure:
+            url = 'https://secure.gravatar.com/avatar'
+        else:
+            url = 'http://www.gravatar.com/avatar'
+        hash = self.avatar_hash or hashlib.md5(self.email.encode('utf-8')).hexdigest()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=hash, size=size, default=default, rating=rating 
+        )
+    
+    def generate_confirmation_token(self, expiration=3600):
         """Generates a confirmation token when  user creates account.
 
         Args:
@@ -40,16 +109,15 @@ class User(UserMixin, db.Model):
         Returns:
             : confirmation token.
         """
-        confirm_token = jwt.encode(
+        token = jwt.encode(
             {
                 "confirm_id": self.id,
-                "expiration": (datetime.now(tz=timezone.utc) +
-                                timedelta(seconds=expiration)).isoformat()
+                "exp": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)
             },
             current_app.config['SECRET_KEY'],
-            algorithm="HS256"
+            algorithm  ="HS256"
         )
-        return confirm_token
+        return token
     
     def confirm_token(self, token):
         """Verifies the authenticity of the just generated token.
@@ -62,14 +130,14 @@ class User(UserMixin, db.Model):
         """
         try:
             token_data = jwt.decode(
-                token,
+                token, 
                 current_app.config['SECRET_KEY'],
-                leeway=datetime(seconds=2000).fromisoformat(),
-                algorithms=['HS256']
+                leeway = datetime(seconds=20),
+                algorithms = ["HS256"]
             )
         except:
             return False
-        if token.data.get('confirm_id') != self.id:
+        if token_data.get('confirm_id') != self.id:
             return False
         self.confirmed = True
         db.session.add(self)
@@ -119,12 +187,7 @@ class User(UserMixin, db.Model):
         return True
     
     def ping(self):
-        """Pings the user object.
-
-        Returns:
-            _type_: _description_
-        """
-        self.last_seen = datetime.now(datetime.timezone.utc)
+        self.last_seen = datetime.datetime.utcnow()
         db.session.add(self)
 
     @property
@@ -147,3 +210,18 @@ class User(UserMixin, db.Model):
     
     def get_id(self):
         return str(self.id)
+    
+    def can(self, permissions):
+        return self.role is not None and (self.role.permissions & permissions) == permissions
+    
+    def is_administrator(self):
+        return self.can(permissions=Permission.ADMINISTER)
+    
+class AnonymousUser(AnonymousUserMixin):
+    def can(self, permissions):
+        return False
+    
+    def is_administrator(self):
+        return False
+    
+login_manager.anonymous_user = AnonymousUser

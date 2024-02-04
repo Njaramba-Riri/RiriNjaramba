@@ -6,9 +6,8 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, login_required, logout_user, current_user
 
 from sqlalchemy import exc
-
 from app import db
-from .form import LoginForm, RegisterForm, forgotPass, resetPassword
+from .forms import LoginForm, RegisterForm, forgotPass, resetPassword
 from .models import User
 
 from ..email import send_email
@@ -21,13 +20,25 @@ auth_blueprint = Blueprint("auth", __name__,
 
 @auth_blueprint.before_app_request
 def before_request():
-    if current_user.is_authenticated:
+    if not current_user.is_authenticated:
         current_user.ping()
         if not current_user.confirmed \
             and request.endpoint \
                 and request.blueprint != 'auth' \
                     and request.endpoint != 'static':
-            return redirect(url_for('.unconfirmed'))
+            return redirect(url_for('auth.unconfirmed'))
+
+@auth_blueprint.route("/unconfirmed")
+def unconfirmed():
+    if current_user.is_anonymous or current_user.confirmed:
+        return redirect(url_for('mainapp.index'))
+    user_id = session.get('id')
+    user = User.query.filter_by(id=user_id).first_or_404()
+    email = user.email
+    username = user.username
+    # if not email or username or current_user.confirmed:
+    #     return redirect(url_for('mainapp.index'))
+    return render_template("auth/unconfirmed.html", username=username, email=email)
 
 @auth_blueprint.route('/signin', methods=['POST', 'GET'])
 def signin():
@@ -41,7 +52,8 @@ def signin():
             next_url = request.args.get('next')
             if next_url:
                 return redirect(url_for(next_url))
-            return redirect(url_for('blogs.blog_index'))
+            flash(f"{current_user.username }, you have been logged in, welcome.", category="info")
+            return redirect(url_for('mainapp.index'))
         flash("Wrong credentials, kindly try again.", category="warning")
     return render_template("auth/login.html", form=form)
 
@@ -71,19 +83,7 @@ def register():
             flash("Not able to create your account at the moment, kindly try later.", category="info")
     return render_template("auth/register.html", form=form)
 
-@auth_blueprint.route("/unconfirmed")
-def unconfirmed():
-    if current_user.is_anonymous or current_user.confirmed:
-        return redirect(url_for('mainapp.index'))
-    user_id = session.get('id')
-    user = User.query.filter_by(id=user_id).first_or_404()
-    email = user.email
-    username = user.username
-    # if not email or username or current_user.confirmed:
-    #     return redirect(url_for('mainapp.index'))
-    return render_template("auth/unconfirmed.html", username=username, email=email)
-
-@auth_blueprint.route('/confirm/<string:token>')
+@auth_blueprint.route('/confirm/<token>')
 @login_required
 def confirm(token):
     if current_user.is_anonymous or current_user.confirmed:
@@ -102,8 +102,7 @@ def resend_confirmation_token():
     token = current_user.generate_confirmation_token()
     send_email(to=current_user.email, subject="New Confirmation Token.",
                template="auth/email/confirm", token=token, user=current_user)
-    flash("A new confirmation email has been sent to you just now, \
-           kindly check your inbox; if not, check your spam folder.", category="info")
+    flash("A new confirmation email has been sent to you just now, check your inbox.", category="info")
     return redirect(url_for('mainapp.index'))
 
 @auth_blueprint.route('/forgot-password', methods=['POST', 'GET'])
@@ -137,6 +136,7 @@ def password_reset(token):
 
     
 @auth_blueprint.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('mainapp.index'))

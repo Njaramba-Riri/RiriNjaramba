@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_caching import Cache
+from flask_moment import Moment
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_bootstrap import Bootstrap
 
 from config import DevConfig
 
@@ -10,6 +12,8 @@ db = SQLAlchemy()
 migrate = Migrate()
 cache = Cache()
 debug = DebugToolbarExtension()
+moment = Moment()
+bootstrap = Bootstrap()
 
 def not_found(e):
     if request.accept_mimetypes.accept_json and \
@@ -42,15 +46,22 @@ def create_app(object):
     db.init_app(app)
     migrate.init_app(app, db)
     cache.init_app(app)
+    moment.init_app(app)
+    bootstrap.init_app(app)
     debug.init_app(app)
+
 
     from .main import create_app as mainapp_create_module
     from .blogs import create_app as blog_create_app
     from .auth import create_app as auth_create_app
+    from .admin import create_app as admin_create_app
+    from .users import create_app as users_create_app
 
     mainapp_create_module(app)
     blog_create_app(app)
     auth_create_app(app)
+    admin_create_app(app)
+    users_create_app(app)
 
     app.register_error_handler(404, not_found)
     app.register_error_handler(405, method_not_allowed)

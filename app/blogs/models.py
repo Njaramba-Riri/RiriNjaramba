@@ -19,6 +19,7 @@ class Posts(db.Model):
 
     post_id = db.Column(db.Integer(), primary_key=True)
     post_author = db.Column(db.String(100), nullable=False, index=True)
+    author_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
     title = db.Column(db.String(100), nullable=False, unique=True, index=True)
     post = db.Column(db.Text(), nullable=False)
     tags = db.relationship('Tag', secondary=tags,

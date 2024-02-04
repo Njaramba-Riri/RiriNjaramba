@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import 'macros/pagination.html' as pagination %}
 
 {% block title %}Blogs - Riri NJaramba {% endblock %}
 
@@ -13,6 +15,11 @@
                 <ion-icon name="search-outline"></ion-icon>
                 <input type="text" id="search-blog" placeholder="Search Posts.">
             </div>
+        </div>
+        <div class="add-blog">
+            {% if current_user.can(permission.WRITE_ARTICLE) %}
+            {{ wtf.quick_form(form) }}
+            {% endif %}
         </div>
         <div class="posts">
             <div class="blogs">

@@ -39,7 +39,7 @@ def generate_tag(n: int):
             db.session.rollback()
     return tags  
 
-def generate_comment(n: int) -> db.Model:
+def generate_comment(n: int):
     """Generates blog posts comments.
 
     Args:
@@ -82,7 +82,7 @@ def generate_comment_replies(n: int, comment: list) -> db.Model:
 
         reply.reply = fake.text()
         reply.date = fake.date_this_decade(before_today=True, after_today=False)
-        reply.comment_id = comment[random.randrange(0, len(comment))].comment.id
+        #reply.comment_id = comment[random.randrange(0, len(comment))].comment.id
 
         try:
             db.session.add(reply)
@@ -96,7 +96,7 @@ def generate_comment_replies(n: int, comment: list) -> db.Model:
 
 
 
-def generate_blogs(n: int, tags: list, comments: list, replies: list) -> db.Model:
+def generate_blogs(n: int, tags: list, comments: list):
     """Generates fake blog posts.
 
     Args:
@@ -112,8 +112,8 @@ def generate_blogs(n: int, tags: list, comments: list, replies: list) -> db.Mode
         post.post_author = "Riri Njaramba"
         post.title = fake.sentence()
         post.post = fake.text(max_nb_chars=5000)
-        post.tags = [tags[random.randrange(0, 10)] for i in range(0, 2)]
-        post.comment = comments[random.randrange(0, 30)].comment
+        post.tags = [tags[random.randrange(0, 10)] for i in range(len(tags))]
+        #post.comment = comments[random.randrange(0, 30)].comment
         post.updated = fake.boolean()
         post.date_created = fake.date_this_decade(before_today=True, after_today=False)
         post.date_updated = fake.date_this_decade(before_today=True, after_today=False)
