@@ -1,0 +1,18 @@
+{% macro render(form) %}
+    {{ form.hidden_tag() }}
+    {% for field in form %}
+        {% if field.widget.input_type != 'hidden' %}
+            {% if field.type != 'SubmitField' %}
+                <div class="blog-field">
+                    {% if field.name == 'title' %}
+                        {{ field.label(class_='label') }}
+                        {{ field(class_='blog-title', placeholder='Here goes your blog title.') }}
+                    {% else %}
+                        {{ field.label(class_='label') }}
+                        {{ field(class_='blog-input', placeholder="...and here goes your tea.") }}
+                    {% endif %}
+                </div>
+           {% endif %} 
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

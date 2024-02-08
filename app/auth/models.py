@@ -69,6 +69,7 @@ class User(UserMixin, db.Model):
     created = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
     posts = db.relationship('Posts', backref='author', lazy='dynamic')
+    comments = db.relationship('Comments', backref='author', lazy='dynamic')
     
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

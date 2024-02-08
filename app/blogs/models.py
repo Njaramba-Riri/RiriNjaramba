@@ -1,5 +1,8 @@
 from datetime import datetime, timezone
 
+from markdown import markdown
+import bleach
+
 from app import db
 
 
@@ -21,18 +24,39 @@ class Posts(db.Model):
     post_author = db.Column(db.String(100), nullable=False, index=True)
     author_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
     title = db.Column(db.String(100), nullable=False, unique=True, index=True)
+    title_html = db.Column(db.Text()) 
     post = db.Column(db.Text(), nullable=False)
+    post_html = db.Column(db.Text())
     tags = db.relationship('Tag', secondary=tags,
                            backref=db.backref('Blogs', lazy='dynamic'))
-    comment = db.relationship('Comments', backref='Blogs', lazy='dynamic')
+    comments = db.relationship('Comments', backref='blog', lazy='dynamic')
     updated = db.Column(db.Boolean(), default=False, nullable=False)
     date_created = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
     date_updated = db.Column(db.DateTime(), default=datetime.now(timezone.utc), 
                              onupdate=datetime.now(timezone.utc))
+    
+    @staticmethod
+    def on_changed_body(target, value, oldvalue,initiator):
+        allowed_tags = [
+            'a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+            'em', 'i', 'li', 'ol', 'ul', 'pre', 'strong', 'h1',
+            'h2', 'h3', 'p'
+        ]
+
+        target.title_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True
+        ))
+        target.post_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='xhtml'),
+            tags=allowed_tags, strip=True
+        ))
+
 
     def __repr__(self) -> str:
         return "<author: {}>".format(self.post_author) 
 
+db.event.listen(Posts.post, 'set', Posts.on_changed_body)
 
 class Tag(db.Model):
     """Represents the post tags.
@@ -63,12 +87,29 @@ class Comments(db.Model):
     email = db.Column(db.String(64), unique=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     comment = db.Column(db.Text(), nullable=False)
-    date = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
+    comment_html = db.Column(db.Text())
+    disabled = db.Column(db.Boolean())
     blog_id = db.Column(db.Integer(), db.ForeignKey('Blogs.post_id'))
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))    
+    date = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
+
+    @staticmethod
+    def on_changed_body(value, target, oldvalue, initiator):
+        allowed_tags = [
+            'a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong'
+        ]
+
+        target.comment_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True
+        ))
+
 
     def __repr__(self) -> str:
         return "<comment: {}>".format(self.comment[:15])
     
+db.event.listen(Comments.comment, 'set', Comments.on_changed_body)
+
 class CommentReply(db.Model):
     """Comments replies db representation.
 

@@ -7,7 +7,7 @@ user_blueprint = Blueprint("users", __name__,
                            static_folder="static/users", template_folder="template/users",
                            url_prefix="/users/")
 
-@user_blueprint.route('/user/<string:username>')
+@user_blueprint.route('/@<string:username>')
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     if not user:

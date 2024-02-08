@@ -1,0 +1,17 @@
+<nav>
+    <ul>
+        <li>
+            <a href="{{ url_for('blogs.blog_index') }}">Blogs</a>
+        </li>
+        <li>
+            <a href=""><i class="fa-regular fa-bell"></i></a>
+        </li>
+        <li>
+            <a href="{{ url_for('users.user', username=current_user.username) }}">
+                <img src=" {{current_user.gravatar(size=28) }}" alt="profile picture">
+                {{ current_user.username | title }}
+            </a>
+        </li>
+    </ul>
+</nav>
+

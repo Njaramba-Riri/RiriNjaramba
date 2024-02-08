@@ -20,7 +20,7 @@ auth_blueprint = Blueprint("auth", __name__,
 
 @auth_blueprint.before_app_request
 def before_request():
-    if not current_user.is_authenticated:
+    if current_user.is_authenticated:
         current_user.ping()
         if not current_user.confirmed \
             and request.endpoint \

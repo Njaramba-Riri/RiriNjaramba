@@ -2,12 +2,12 @@ from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import RecaptchaField
 from wtforms import StringField, SubmitField, TextAreaField, HiddenField
 from wtforms.validators import Email, DataRequired, Optional, Length
-
+from flask_pagedown.fields import PageDownField
 
 class BlogPost(FlaskForm):
-    title = StringField("Blog title", validators=[DataRequired()])
-    body = TextAreaField("What is on your mind?", validators=[DataRequired()])
-    submit = SubmitField("submit")
+    title = PageDownField("Blog title", validators=[DataRequired(message="Jameni, this field can't be empty.")])
+    body = PageDownField("Your blog content", validators=[DataRequired()])
+    submit = SubmitField("Publish")
 
 class CommentForm(FlaskForm):
     """Defines the form rendered on blog page for user comments.

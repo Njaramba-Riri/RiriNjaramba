@@ -3,10 +3,10 @@
 {% block title %} Home - Riri Njaramba {% endblock %}
 
 {% block content %}
-{% include 'include/loader.html' %}
+<!-- {% include 'include/loader.html' %} -->
 {% include 'include/nav.html' %}
 {% include 'include/sidebar.html' %}
-<div class="home">
+<div class="hoome">
     <section class="intro">
         <div class="hello">
             <div class="greetings">
@@ -16,16 +16,25 @@
                 </div>
                 <div class="titles">
                     <div class="title">
-                        <h2><span>Data Scientist.</span></h2>
-                        <p>Who will clean and work with your data to <span>derive insights</span>.</p>
+                        <h2><span>Machine Learning Engineer</span></h2>
+                        <p>
+                            who will leverage my expertise to develop and 
+                            deploy robust machine learning models tailored to your specific needs.
+                        </p>
                     </div>
                     <div class="title">
-                        <h2><span>MLOps Engineer.</span></h2>
-                        <p>Who finds facination in <span>building and deploying</span> ML models to production.</p>
+                        <h2>an <span>IT Specialist</span></h2>
+                        <p>
+                            who will provide comprehensive IT solutions, ensuring seamless integration 
+                            with your existing systems and infrastructure.
+                        </p>
                     </div>
                     <div class="title">
-                        <h2><span>IT Support.</span></h2>
-                        <p>On my happy sunny days find me <span>bulding and maintaining</span> websites.</p>
+                        <h2><span>MLOps Expert</span></h2>
+                        <p>
+                            who will streamline your machine learning workflows, automating model training, testing, 
+                            and deployment processes for more efficient outcomes.
+                        </p>
                     </div>                    
                 </div>
             </div>
@@ -40,39 +49,51 @@
         </div>
     </section>
     <section class="expertise" id="services">
-        <h1>My expertise lies within:</h1>
+        <h1>What I am offering?.</h1>
         <div class="flex">
-            <div class="flex-card" data-tilt>
-                <h2>Anything Data</h2>
-                <p>You probably have a lot of data but don't what to do with it. Be it tabular, images, videos, or text data?.</p>                
+            <div class="flex-card">
+                <h2>ML Engineering.</h2>
+                <p>I design and deploy machine learning models, transforming raw data into actionable insights.
+                    My solutions are tailored to your specific sector, driving innovation and growth.</p>                
             </div>
-            <div class="flex-card" data-tilt>
-                <h2>Anything Data</h2>
-                <p>You probably have a lot of data but don't what to do with it. Be it tabular, images, videos, or text data?.</p>                
+            <div class="flex-card">
+                <h2>MLOps.</h2>
+                <p>
+                    I implement MLOps practices to streamline the machine learning workflow. 
+                    This includes automating model training, testing, and deployment processes, leading to more efficient and reliable outcomes.
+                </p>                
             </div>
-            <div class="flex-card" data-tilt>
-                <h2>Anything Data</h2>
-                <p>You probably have a lot of data but don't what to do with it. Be it tabular, images, videos, or text data?.</p>                
+            <div class="flex-card">
+                <h2>Experiment tracking.</h2>
+                <p>I utilize tools like Weights & Biases and MLFlow to track and manage machine learning experiments. 
+                    This ensures transparency, reproducibility, and aids in model optimization.</p>                
             </div>
-            <div class="flex-card" data-tilt>
-                <h2>Anything Data</h2>
-                <p>You probably have a lot of data but don't what to do with it. Be it tabular, images, videos, or text data?.</p>                
+            <div class="flex-card">
+                <h2>Model Deployment.</h2>
+                <p>I ensure that machine learning models are efficiently deployed and monitored. 
+                    I handle versioning, packaging, and performance monitoring, ensuring your models deliver optimal results.
+                </p>                
             </div>
-            <div class="flex-card" data-tilt>
-                <h2>Anything Data</h2>
-                <p>You probably have a lot of data but don't what to do with it. Be it tabular, images, videos, or text data?.</p>                
+            <div class="flex-card">
+                <h2>IT Consultation.</h2>
+                <p>With a strong background in IT, I provide consultation services to help businesses leverage technology to meet their objectives. 
+                    This includes strategic planning of IT initiatives, system implementation, and IT infrastructure management.
+                </p>                
             </div>
-            <div class="flex-card" data-tilt>
-                <h2>Anything Data</h2>
-                <p>You probably have a lot of data but don't what to do with it. Be it tabular, images, videos, or text data?.</p>                
+            <div class="flex-card">
+                <h2>IT Support.</h2>
+                <p>I provide IT support services to ensure your technology infrastructure runs smoothly and efficiently. 
+                    This includes troubleshooting, system updates, and user training.
+                </p>
             </div>
         </div>
     </section>
     <section class="projects" id="projects">
         <div class="main">
             <div class="pros">
-                <p>Having worked on various projects spanning from 
-                    <span>Data Scrapping, Cleaning, Building Models</span>, to<span> production</span>
+                <p>Here are some of my projects, 
+                    <span>model development, Cleaning, Building Models</span>, to<span> production</span> 
+                    , kindly feel free to reach out if you need further clarification.
                 </p>
             </div>
             <div class="proshow">
@@ -82,21 +103,21 @@
                             <img src="{{ url_for('static', filename='images/projects/landing.jpg') }}" alt="Project 1">
                             <div class="carousel-caption">
                                 <h2>Hospital Management System</h2>
-                                <button onclick="toHospital()">View Source Code</button>
+                                <button onclick="toHospital()" id="hospital">View Source Code</button>
                             </div>
                         </div>
                         <div class="carousel-item">
                             <img src="{{ url_for('static', filename='images/projects/accounts.jpg') }}" alt="Project 2">
                             <div class="carousel-caption">
                                 <h2>Analytics Dashboards</h2>
-                                <button onclick="toAnalytics()">View Files</button>
+                                <button onclick="toAnalytics()" id="vision">View Files</button>
                             </div>
                         </div>
                         <div class="carousel-item">
                             <img src="{{ url_for('static', filename='images/projects/admin.jpg') }}" alt="Project 3">
                             <div class="carousel-caption">
                                 <h2>City Health Website</h2>
-                                <button onclick="toHospital()">View Source Code</button>
+                                <button onclick="toHospital()" id="prediction">View Source Code</button>
                             </div>
                         </div>
                     </div>
@@ -119,11 +140,11 @@
         </div>
     </section>
     <section class="Njaramba" id="contacts">
-        <div class="more">
+        <div class="moree">
             <div class="contact">
-                <h2>Leave a messsage.</h2>
-                <form action="{{ url_for('mainapp.index') }}">
-                    {{ form.hidden_tag }}
+                <h2>Leave your message to get a quote.</h2>
+                <form action="{{ url_for('mainapp.index') }}" method="post">
+                    {{ form.hidden_tag() }}
                     {% for field in form %}
                         {% if field.widget.input_type != 'hidden' %}
                             {% if field.type == 'StringField' %}
@@ -139,7 +160,6 @@
                             {% else %}
                                 <div class="button">
                                     {{ field(class_='submit') }}
-                                    <ion-icon name="send-outline"></ion-icon>
                                 </div>
                             {% endif %}
                         {% endif %}
@@ -147,7 +167,7 @@
                 </form>
             </div>
             <div class="socials">
-                <h2>You can reach me through: </h2>
+                <h2>Alternatively, you can reach me through: </h2>
                 <div class="chat">
                     <img src="{{ url_for('static', filename='images/riri.jpg')}}" alt="Riri Njaramba">
                     <div class="email">
@@ -203,11 +223,29 @@
                     <p>2024.All rights reserved&copy;</p>
                 </div>
                 <div class="heart">
-                    <p>Made with love by Riri</p>
-                    <p><ion-icon name="heart"></ion-icon></p>
+                    <p>Made with <i class="fa fa-heart"></i> by Riri.</p>
                 </div>
             </footer>             
         </div>  
     </section>
 </div>
+{% block js %}
+<script>
+    var hospital = document.getElementById('hospital');
+    var prediction = document.getElementById('prediction');
+    var vision = document.getElementById('vision');
+
+    hospital.addEventListener('click', () =>{
+        window.open('https://github.com/Njaramba-Riri/Hospital', '_blank');
+    })
+
+    prediction.addEventListener('click', () => {
+        window.open('https://github.com/Njaramba-Riri/expenditure-prediction', '_blank')
+    })
+
+    vision.addEventListener('click', () => {
+        window.open('https://github.com/Njaramba-Riri/PyTorch', '_blank');
+    })
+</script>
+{% endblock %}
 {% endblock %}

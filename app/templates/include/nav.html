@@ -18,7 +18,21 @@
                 <li><a href="{{ url_for('blogs.blog_index') }}">Blogs</a></li>
                 <li id="quote"><p>Get a Quote</p></li>
                 {%  if current_user.is_authenticated %}
-                    <li id="account?"><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                 <li id="dropdown"><a href="">{{ current_user.username | upper }}</a></li>
+                    <!-- <ul>
+                        <div class="pro">
+                            <img src="{{ current_user.gravatar(100) }}" alt="">                            
+                        </div>
+                        <div class="menu" id="menu">
+                           <li>
+                                <a href="{{ url_for('users.user', username=current_user.username) }}">Profile</a>
+                            </li>
+                            <li><a href="">Edit Blog</a></li>
+                            <li id="account?">
+                                <a href="{{ url_for('auth.logout') }}">Logout</a>
+                            </li>                            
+                        </div>
+                    </ul> -->
                 {% else %}
                     <li id="account"><a href="{{ url_for('auth.signin') }}">Login</a></li>
                 {% endif %}
@@ -32,6 +46,8 @@
         const buttonMenu = document.querySelector("#menu-button");
         const rootElement = document.documentElement;
         const home = document.getElementById('home');
+        const drop = document.getElementById('dropdown');
+        const menu = document.getElementById('menu');
 
         buttonMenu.addEventListener('click', (e) => {
             rootElement.toggleAttribute('sidebar-open');

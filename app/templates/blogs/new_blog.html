@@ -1,0 +1,68 @@
+{% extends 'base.html'  %}
+{% import 'macros/_form.html' as macro %}
+{% import 'macros/pagination.html' as footer %}
+
+{% block title %}Add New - Riri Njaramba{% endblock %}
+
+{% block content %}
+{% include 'include/custom.html' %}
+{% include 'include/sidebar.html' %}
+<div class="edit-new">
+    <div class="add-new">
+        <div class="blog-form">
+            <form action="{{ url_for('.new_blog') }}" method="post">
+                <div class="top">
+                    {% for field in form if field.type == 'SubmitField' %}
+                        {{ field(class_='submit-blog') }}
+                    {% endfor %}
+                    <h3>What's on your mind?.</h3>                    
+                </div>
+                <div class="fields">
+                    {{ macro.render(form) }}                    
+                </div>
+            </form>        
+        </div>
+        <div class="recent">
+            {% if current_user == user %}
+                <h2>Some of your latest blogs.</h2>
+            {% else %}
+                <h2>Posts by {{ user }}</h2>
+            {% endif %}
+            <div class="recent-posts">
+                {% for blog in pagination %}
+                    <div class="blog">
+                        <div class="header">
+                            <h3>{{blog.title}}</h3>
+                        </div>
+                        <div class="blog-content">
+                            <p>
+                                {{blog.post | truncate(200)}} 
+                                <div class="more">
+                                    <a href="{{ url_for('.blog', title=blog.title) }}">Read More </a>
+                                    <ion-icon name="arrow-forward-outline"></ion-icon> 
+                                </div>
+                            </p>
+                            <div class="tags">
+                                <h5>Tags:</h5>
+                                {% for tag in tags %}
+                                <p class="tag" >{{ tag.name }}</p>
+                                {% endfor %}
+                            </div>
+                            <p>uploaded: {{ moment(blog.date_created).fromNow()  }}.&nbsp; 
+                                On: {{ moment(blog.date_created).format('L') }}.</p>
+                        </div>
+                    </div>
+                {% endfor %}                
+            </div>
+            <div class="pagination">
+                {{ footer.pagination_widget(pagination, 'blogs.edit_blog', title=title) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% block js %}
+{{ super() }}
+    {{ pagedown.include_pagedown() }}
+    {{ moment.include_moment() }}
+{% endblock %}
+{% endblock %}

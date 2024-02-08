@@ -136,8 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function activeLi() {
         controls.forEach((item) => {
             item.classList.remove('active');
+
         });
         this.classList.add('active');
+
     }
 
     controls.forEach((control) => {

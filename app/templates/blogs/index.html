@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
-{% import 'macros/pagination.html' as pagination %}
+{% import 'macros/_form.html' as macro %}
+{% import 'macros/pagination.html' as footer %}
 
 {% block title %}Blogs - Riri NJaramba {% endblock %}
 
@@ -15,23 +15,28 @@
                 <ion-icon name="search-outline"></ion-icon>
                 <input type="text" id="search-blog" placeholder="Search Posts.">
             </div>
-        </div>
-        <div class="add-blog">
-            {% if current_user.can(permission.WRITE_ARTICLE) %}
-            {{ wtf.quick_form(form) }}
-            {% endif %}
+            <div class="add">
+                <a href="{{ url_for('.new_blog') }}">Add new.</a>
+            </div>
         </div>
         <div class="posts">
             <div class="blogs">
-                {% for blog in posts %}
+                {% for blog in pagination %}
                     <div class="blog">
                         <div class="header">
-                            <h3>{{blog.title}}</h3>
+                            {% if blog.title_htl %}
+                                <h3>{{blog.title_html |safe }}</h3>
+                            {% else %}
+                                <h3>{{ blog.title }}</h3>
+                            {% endif %}
                         </div>
                         <div class="blog-content">
-                            <h4>What Really is MLops?.</h4>
                             <p>
-                                {{blog.post | truncate(500)}} 
+                                {% if blog.post_html %}
+                                    {{ blog.post_html | safe | truncate(500) }}
+                                {% else%} 
+                                    {{blog.post | truncate(500)}} 
+                                {% endif %}                                
                                 <div class="more">
                                     <a href="{{ url_for('.blog', title=blog.title) }}">Read More. </a>
                                     <ion-icon name="arrow-forward-outline"></ion-icon> 
@@ -43,19 +48,24 @@
                                 <p class="tag" >{{ tag.name }}</p>
                                 {% endfor %}
                             </div>
+                            <div class="posted">
+                                <p>Posted: {{ moment(blog.date_created).fromNow() }}</p>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}                
             </div>
             <div class="pagination">
-                {% if prev %}
-                    <a href="{{ prev }}">Prev <i class="far fa-caret"></i></a>
-                {% endif %}                 
-                {% if next %}
-                    <a href="{{ next }}">Next</a>
-                {% endif %}
+                <div>
+                    {{ footer.pagination_widget(pagination, 'blogs.blog_index') }}
+                </div>
             </div>
         </div>
     </div>
 </div>
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{{ moment.include_moment() }}
+{% endblock %}
 {% endblock %}

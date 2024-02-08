@@ -5,6 +5,7 @@ from flask_caching import Cache
 from flask_moment import Moment
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_bootstrap import Bootstrap
+from flask_pagedown import PageDown
 
 from config import DevConfig
 
@@ -14,6 +15,7 @@ cache = Cache()
 debug = DebugToolbarExtension()
 moment = Moment()
 bootstrap = Bootstrap()
+pagedown = PageDown()
 
 def not_found(e):
     if request.accept_mimetypes.accept_json and \
@@ -47,7 +49,8 @@ def create_app(object):
     migrate.init_app(app, db)
     cache.init_app(app)
     moment.init_app(app)
-    bootstrap.init_app(app)
+    #bootstrap.init_app(app)
+    pagedown.init_app(app)
     debug.init_app(app)
 
 
