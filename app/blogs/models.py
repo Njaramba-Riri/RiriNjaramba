@@ -44,7 +44,7 @@ class Posts(db.Model):
         ]
 
         target.title_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'),
+            markdown(value, output_format='xhtml'),
             tags=allowed_tags, strip=True
         ))
         target.post_html = bleach.linkify(bleach.clean(

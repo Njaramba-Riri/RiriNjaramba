@@ -42,7 +42,7 @@ def unconfirmed():
 
 @auth_blueprint.route('/signin', methods=['POST', 'GET'])
 def signin():
-    if current_user.is_authenticated:
+    if not current_user.is_anonymous:
         return redirect(url_for('mainapp.index'))
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
@@ -76,7 +76,7 @@ def register():
             send_email(to=new_user.email, subject="Confirm Your Account", 
                        template="auth/email/confirm", user=new_user, token=token)
             flash("Thank you for registering, welcome to my blog", category="info")
-            return redirect(url_for('.unconfirmed'))
+            return redirect(url_for('auth.unconfirmed'))
         except exc.IntegrityError as e:
             db.session.rollback()
             logger.error("Error while registerin user: {}".format(e))

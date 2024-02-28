@@ -61,14 +61,14 @@
                     <div class="reply">
                         {{ comment.comment }}
                     </div>
-                    <div class="replies">
-                        {% for reply in replies %}
-                            {% if reply.comment_id == comment.id %}
-                            {{ reply.reply }}
-                            {% endif %}
-                        {% endfor %}
-                    </div>
                 </div>   
+                <div class="replies">
+                    {% for reply in replies %}
+                        {% if reply.comment_id == comment.id %}
+                        {{ reply.reply }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
                 <div class="discussion">
                     <div class="reply">
                         {% if current_user.is_anonymous %}
@@ -117,7 +117,11 @@
                     {% if field.type == 'StringField' %}
                         <div class="field">
                             {{ field.label(class_='label') }}
-                            {{ field(class_='input-area', autofill='none') }}
+                            {% if field.name == 'email' %}
+                                {{ field(class_='input-area', autofill='none', title="Don't worry, your email won't be displayed." ) }}
+                            {% else %}
+                                {{ field(class_='input-area', autofill='none') }}
+                            {% endif %}
                             {% if field.errors %}
                                 {% for e in field.errors %}
                                 <p class="help-block">{{ e }}</p>
@@ -125,7 +129,7 @@
                             {% endif %}
                         </div>
                     {% elif field.type == 'TextAreaField' %}
-                        <div class="field">
+                        <div class="text">
                             {{ field.label(class_='label') }}
                             {{ field(class_='text-area') }}
                         </div>
@@ -143,12 +147,14 @@
     </div>
 </div>
 {% block js %}
-{{ super() }}
-{{ moment.include_moment() }}
-<script type="text/javascript">
-    function goBack(){
-        window.history.back()
-    }
-</script>
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+    {{ moment.include_moment() }}
+
+    <script type="text/javascript">
+        function goBack(){
+            window.history.back()
+        }
+    </script>
 {% endblock js %}
 {% endblock %}

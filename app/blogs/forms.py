@@ -18,7 +18,7 @@ class CommentForm(FlaskForm):
     email = StringField("Your Email:", validators=[DataRequired(), Email()])
     name = StringField("Your Name:", validators=[DataRequired(message="Name field can't be empty"), 
                                                  Length(max=30)])
-    comment = TextAreaField("Your Comment:", validators=[DataRequired(message="Comment field can't be null ffs."), 
+    mawoni = TextAreaField("Your Comment:", validators=[DataRequired(message="Comment field can't be null ffs."), 
                                                        Length(max=500, message="Comment can't be more than 500 characters.")])
     #captcha = RecaptchaField(validators=[DataRequired(message="This is a required field.")])
     submit = SubmitField("comment")

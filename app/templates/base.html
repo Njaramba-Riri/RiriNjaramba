@@ -8,7 +8,9 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/riri.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootsttrap.min.css">   
+    <link rel="stylesheet" href="{{ url_for('static', filename='font/css/all.css') }}"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
 </head>
 <body>
 {% block body %}
@@ -34,7 +36,7 @@
     <script src="{{ url_for('static', filename='js/main.js')}}"></script>
     <script src="{{ url_for('static', filename='js/vanilla-tilt.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> -->
+    <script src="{{ url_for('static', filename='font/js/all.min.js')}}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" 

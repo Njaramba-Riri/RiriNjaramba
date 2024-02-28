@@ -15,17 +15,19 @@
                 <ion-icon name="search-outline"></ion-icon>
                 <input type="text" id="search-blog" placeholder="Search Posts.">
             </div>
+            {% if current_user.can(permission.WRITE_ARTICLE) %}
             <div class="add">
                 <a href="{{ url_for('.new_blog') }}">Add new.</a>
             </div>
+            {% endif %}
         </div>
         <div class="posts">
             <div class="blogs">
                 {% for blog in pagination %}
                     <div class="blog">
                         <div class="header">
-                            {% if blog.title_htl %}
-                                <h3>{{blog.title_html |safe }}</h3>
+                            {% if blog.title_html %}
+                                <h3>{{ blog.title | safe }}</h3>
                             {% else %}
                                 <h3>{{ blog.title }}</h3>
                             {% endif %}
@@ -43,9 +45,9 @@
                                 </div>
                             </p>
                             <div class="tags">
-                                <h5>Tags:</h5>
+                                <h5></h5>
                                 {% for tag in tags %}
-                                <p class="tag" >{{ tag.name }}</p>
+                                <p class="tag" title="Click for more on {{ tag.name }}">{{ tag.name }}</p>
                                 {% endfor %}
                             </div>
                             <div class="posted">

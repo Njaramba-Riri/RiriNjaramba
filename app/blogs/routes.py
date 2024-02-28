@@ -45,7 +45,7 @@ def blog(title):
         comment.email = form.email.data
         comment.name = form.name.data
         comment.author = current_user._get_current_object()
-        comment.comment = form.comment.data
+        comment.comment = form.mawoni.data
         comment.blog_id = post.post_id
         try:
             db.session.add(comment)
@@ -54,7 +54,7 @@ def blog(title):
             return redirect(url_for('blogs.blog', title=title))
         except Exception as e:
             logger.info("Error while adding comment: {}".format(e))
-            flash("Error: {}".format(e))
+            flash("Error: {}".format(e), category="warning")
             db.session.rollback()
     page = request.args.get('page', 1, type=int)
     if page == -1:
@@ -129,3 +129,4 @@ def edit_blog(title):
     session['title'] = blog.title
     return render_template("blogs/new_blog.html", form=form, title=session.get('title'),
                             permission=Permission, pagination=pagination, user=blog.author)
+

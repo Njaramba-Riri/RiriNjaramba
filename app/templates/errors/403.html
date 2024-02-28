@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Riri Njaramba - Forbidden {% endblock %}
+
+{% block content %}
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
+<div class="error">
+    <div class="text">
+        <h3>Forbidden Access.</h3>
+        <h4>You, explorer you!.</h4>
+        <p> 
+            We all love to explore, don't we?. Unfortunately, the resource you're trying to request needs you to have some privileges which sadly, you don't.
+        </p>
+        <p>Kindly contact site administrator for more.</p>
+        <button onclick="goBack()" id="back">Go Back</button>
+    </div>
+</div>
+{% block js %}
+    {{ super() }}
+    <script>
+        function goBack(){
+            window.history.back()
+        }
+    </script>
+{% endblock js %}
+{% endblock %}

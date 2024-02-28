@@ -1,0 +1,140 @@
+@media(max-width: 600px){
+    .intro {
+        display: block;
+        min-height: 80vh;
+    }
+    .intro .hello {
+        /* position: absolute;
+        padding: 10rem 3rem; */
+        text-align: center;
+        z-index: 30;
+    }
+    .scroll{
+        display: none;
+        margin-top: 18rem;
+    }
+    .me{
+        /* overflow: visible; */
+        height: 80vh;
+    }
+    .me img{
+        position: absolute;
+        /* top: 5%; */
+        left: 10%;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        border-bottom-left-radius: 100%;
+        animation: play 3s ease-in-out alternate-reverse infinite;
+    }
+    @keyframes play {
+        20%{
+            transform: translateX(-20%) translateY(-20%);
+        }
+        40%{
+            transform: translateX(50%) translateY(0);
+        }
+        60%, 70%{
+            transform: translateX(0) translateY(50%);
+        }
+        100%{
+            transform: translateX(-30%) translateY(100%);
+        }
+        
+    }
+
+    .blogs{
+        padding: 5rem 1rem;
+        overflow-x: hidden;
+    }
+    .blogs .items{
+        padding: 1rem;
+    }
+    .blog-search{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .blog-search #search-blog:hover{
+        height: 3rem;
+        border-radius: 2rem;
+    }
+    .items .blogs{
+        padding: 0.5rem;
+        grid-template-columns: 1fr;
+    }
+    .posts .blog{
+        padding: .5rem;
+    }
+    .blogs-page{
+        padding: 5rem .5rem;
+    }
+    .blogs-page .blog{
+        padding: 1rem;
+    }
+    .blogs-page .overview{
+        align-items: start;
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 1rem;
+    }
+    .overview button{
+        margin-top: -5rem;
+    }
+    .comment{
+        padding: 1rem;
+    }
+    .comment-form form{
+        grid-template-columns: 1fr;
+    }
+    .comment-form .input-area{
+        width: 100%;
+        border: 1px solid var(--ibiza);
+    }
+    form .submit{
+        margin: 0;
+    }
+    .quote{
+        padding: 5rem 1rem;
+    }
+    .quote .warm{
+        margin: 0;
+    }
+    .quote .quote-form, 
+    .quote .alt{
+        width: 100%;
+        transform: none;
+        margin: 0;
+        margin-top: 2rem;
+    }
+    .users{
+        padding: .5rem;
+    }
+    .user-details .posts{
+        padding: 0 .5rem;
+    }
+    .posts .post-card{
+        margin-top: 2rem;
+    }
+    .post-card .header{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column-reverse;
+    }    
+    .auth{
+        padding: 5rem 1rem;
+    }
+    .auth .auth-form{
+        position: relative;
+        transform: none;
+        width: 100%;
+        top: 0;
+        left: 0;
+        margin-top: 5rem;
+    }
+    .auth form{
+        padding: 1rem;
+    }
+    .auth .unconfirmed{
+        padding: 2rem;
+    }
+}

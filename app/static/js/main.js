@@ -39,7 +39,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         startTimer();
     }
 });
+// document.addEventListener("DOMContentLoaded", ()=>{
+//     const sidebar = document.getElementById("sidebar");
 
+//     if (sidebar){
+//         if(sidebar.classList.contains('active'))
+//     }
+// })
 document.addEventListener("DOMContentLoaded", (event) => {
     var passwordField = document.querySelectorAll(".password-field");
     var togglePassword = document.querySelectorAll(".toggle-password");
@@ -78,6 +84,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 document.addEventListener('DOMContentLoaded', () => {
     const nav = document.querySelector("#nav");
     const sidebar = document.querySelector("html[sidebar-open] ")
+    const close = document.querySelector(".close-button");
 
     window.addEventListener('scroll', () => {
        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20){
@@ -91,17 +98,33 @@ document.addEventListener('DOMContentLoaded', () => {
         } 
     });
 
-    const buttonMenu = document.querySelector("#menu-button");
+    if(close){
+        // close.style.background = 'red';
+        close.addEventListener('click', ()=>{
+            sidebar.style.display = 'none';
+        })
+    }
+
+    const buttonMenu = document.querySelector("#menu-buttton");
+    const closeSidebar = document.querySelector("#menu-button");
     const rootElement = document.documentElement;
     const home = document.getElementById('home');
 
     buttonMenu.addEventListener('click', (e) => {
         rootElement.toggleAttribute('sidebar-open');
     });
+    closeSidebar.addEventListener('click', ()=>{
+        rootElement.toggleAttribute('sidebar-open');
+    });
     buttonMenu.addEventListener('mouseover', () =>{
         this.title = 'Close'
     });
 
+    window.addEventListener('click', ()=>{
+        if(! closeSidebar){
+            rootElement.toggleAttribute('sidebar-open');
+        }
+    });
     home.addEventListener('click', () => {
         window.location.href = "{{ url_for('mainapp.index') }}"
     });

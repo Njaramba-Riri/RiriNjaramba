@@ -1,8 +1,6 @@
-{% extends 'base.html' %}
-{% block content %}
 <nav class="navigation" id="nav">
     <div class="toggle">
-        <button class="button" id="menu-button" title="Menu">
+        <button class="button" id="menu-buttton" title="Menu">
             <span></span>
             <span></span>
             <span></span>
@@ -16,9 +14,12 @@
                 <li id="service"><p>Services</p></li>
                 <li id="project"><p>Projects</p></li>
                 <li><a href="{{ url_for('blogs.blog_index') }}">Blogs</a></li>
-                <li id="quote"><p>Get a Quote</p></li>
+                <li id="quote">
+                    <a href="{{ url_for('mainapp.quote') }}">Get a Quote</a>
+                </li>
                 {%  if current_user.is_authenticated %}
                  <li id="dropdown"><a href="">{{ current_user.username | upper }}</a></li>
+                 <li> <a href="{{ url_for('auth.logout') }}">Logout</a></li>
                     <!-- <ul>
                         <div class="pro">
                             <img src="{{ current_user.gravatar(100) }}" alt="">                            
@@ -40,26 +41,3 @@
         </nav>
     </div>        
 </nav>
-{% block js %}
-{{ super() }}
-    <script>
-        const buttonMenu = document.querySelector("#menu-button");
-        const rootElement = document.documentElement;
-        const home = document.getElementById('home');
-        const drop = document.getElementById('dropdown');
-        const menu = document.getElementById('menu');
-
-        buttonMenu.addEventListener('click', (e) => {
-            rootElement.toggleAttribute('sidebar-open');
-        })
-        buttonMenu.addEventListener('mouseover', () =>{
-            this.title = 'Close'
-        })
-
-        home.addEventListener('click', () => {
-            window.location.href = "{{ url_for('mainapp.index') }}"
-        });
-
-    </script>
-{% endblock js %}
-{% endblock %}

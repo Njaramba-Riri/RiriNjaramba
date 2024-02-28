@@ -23,4 +23,19 @@
         </form>        
     </div>    
 </div>
+{% block js %}
+{{ super() }}
+<script>
+    const inputs = document.querySelectorAll("input");
+
+    inputs.forEach((input) => {
+        input.addEventListener('click', function(){
+            inputs.forEach((otherInput) =>{
+                otherInput.style.border = 'none';
+            });
+            this.style.border = '2px solid blue';
+        })
+    })
+</script>
+{% endblock %}
 {% endblock %}

@@ -4,7 +4,7 @@ import hashlib
 
 import jwt
 from flask import current_app, request, has_request_context
-from flask_login import AnonymousUserMixin, UserMixin, login_manager
+from flask_login import AnonymousUserMixin, UserMixin
 
 from app import db
 from . import bcrypt
@@ -217,12 +217,3 @@ class User(UserMixin, db.Model):
     
     def is_administrator(self):
         return self.can(permissions=Permission.ADMINISTER)
-    
-class AnonymousUser(AnonymousUserMixin):
-    def can(self, permissions):
-        return False
-    
-    def is_administrator(self):
-        return False
-    
-login_manager.anonymous_user = AnonymousUser

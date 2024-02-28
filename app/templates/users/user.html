@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ user.username }} Profile - Authors{% endblock %}
+{% block title %}{{ user.username }} Profile - Blog Author{% endblock %}
 
 {% block content %}
 {% include 'include/custom.html' %}
@@ -9,52 +9,136 @@
         <div class="profile">
             <div class="picture">
                 {% if user.email %}
-                    <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}" alt="">
+                    {% if user.is_administrator %}
+                        <img src="{{ url_for('static', filename='images/riri.jpg') }}" alt="">
+                    {% else %}
+                        <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}" alt="">
+                    {% endif %}
                 {% endif %}                
             </div>
             <div class="details">
-                <p>{{ user.username }}</p>
-                <p><a href="mailto:{{ user.email }}">{{ current_user.email }}</a></p>                
+                {% if user.is_administrator %}
+                    <p>Riri Njaramba.</p>
+                {% else %}
+                    <p>{{ user.username | title }}</p>    
+                {% endif %}          
                 {% if user.about_me %}
                     <p>{{ user.about_me }}</p>
                 {% endif %}
-                <p> Member since {{ moment(user.created).format('LL') }}.</p>
-                <p>Last activity {{ moment(user.last_seen).fromNow() }}.</p>                
+                <p> Member since <span>{{ moment(user.created).format('LL') }}</span>.</p>
+                <p>Last activity was <span>{{ moment(user.last_seen).fromNow() }}</span>.</p>                
             </div>
         </div>
         <hr>
         <div class="more">
-            <p id="posts" title="Posts by {{ user.username }}.">Posts</p>
-            <p id="comments" title="Comments by {{ user.username }}.">Replies</p>
-            <p id="about" title="About {{ user.username }}.">About</p>
+            <p class="item" id="posts" title="Posts by {% if user.is_administrator %} Riri Njaramba {% else%} {{ user.username }}. {% endif %}">Posts <span># {{ posts | length }}</span></p>
+            <p class="item" id="comments" title="Comments by {% if user.is_administrator %} Riri Njaramba {% else%} {{ user.username }}. {% endif %}">Comments <span># {{ replies | length }}</span></p>
+            <p class="item" id="about" title="About {% if user.is_administrator %} Riri Njaramba {% else%} {{ user.username }}. {% endif %}.">About</p>
         </div>
         <div class="posts" id="blogs">
-            <h3>Posted by {{ user.username }}</h3>
-            {% for post in posts %}
+            <h2>
+                Posts by {% if user.is_administrator %} Riri Njaramba. {% else%} {{ user.username }} {% endif %}
+            </h2>
+            {% for post in posts  %}
                 {% if post.post_html %}
-                    {{ post.post_html | safe }}
+                    <div class="post-card">
+                        <div class="header">
+                            <h3>{{ post.title }}</h3>
+                            <p><i class="fa fa-classic fa-clock"></i>{{ moment(post.date_created).fromNow() }}</p> 
+                        </div>
+                        <p>{{ post.post_html | safe  | truncate(500) }}</p>
+                        <p>
+                            <a href="{{ url_for('blogs.blog', title=post.title)}}" title="Continue reading more about {{ post.title }}">
+                                Read more. <i class="fa fa-classic fa-arrow-right"></i>
+                            </a>
+                        </p>
+                    </div>
                 {% else %}
-                    {{ post.post }}
+                    <div class="post-card">
+                        <h3>{{ post.title }}</h3>
+                        <p>{{ post.post }}</p>
+                    </div>
                 {% endif %}
             {% endfor %}
-        </div>        
+        </div>   
+        <div class="replies" id="replies">
+            <h2>Comments by {% if user.is_administrator %} Riri Njaramba {% else%} {{ user.username }}. {% endif %}.</h2>
+            {% if not comments %}
+                <p class="no-comm">
+                    <span>{% if user.is_administrator %} Riri Njaramba {% else%} {{ user.username }}. {% endif %}</span>
+                    does not have any comments by far.
+                </p> 
+            {% else %}
+                {% for comment in comments %}
+                    <p class="comm">
+                        {{ comment.comment }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="whome" id="whome">
+            <h2>
+                About Riri Njaramba
+                {% if not current_user.is_authenticated and not current_user.id == user.id %}
+                    {% if current_user.is_administrator %}
+                        <a href="">Edit About [Admin]</a>
+                    {% else %}
+                        <a href="">Edit About</a>
+                    {% endif %}
+                {% endif %}
+            </h2>
+            <p>
+                James Riri Njaramba is a Machine Learning enthusiast with a comprehensive experience in the respective areas of
+                predictive modelling, computer vision, game development. With a deep passion in computer vision, Riri Njaramba has a diverse set 
+                of projects within diverse fields. More recently, Riri Njaramba have accomplished an end to end project aimed at leveraging
+                the power of ML to help people living with disabilities. 
+
+            </p>
+            <button class="download" id="download">
+                Download my CV.
+            </button>
+        </div>     
     </div>
 </div>
-    {% block js %}
+{% block js %}
     {{ super() }}
+    {{ pagedown.include_pagedown() }}
     {{ moment.include_moment() }}
     <script>
-        const posts = document.getElementById("posts");
-        const comments = document.getElementById("comments");
-        const about = document.getElementById("about");
+        const userElements = ['posts', 'comments', 'about'];
+        const contentElements = ['blogs', 'replies', 'whome'];
 
-        if(posts){
-            var blogs = document.getElementById("blogs");
+        userElements.forEach((element, index) => {
+            const clickableElement = document.getElementById(element);
+            clickableElement.addEventListener('click', function(){
+                userElements.forEach((otherElements) => {
+                    const otherElement = document.getElementById(otherElements);
+                    otherElement.classList.remove('active');
+                });
+                this.classList.add('active');
 
-            posts.addEventListener('click', function(){
-                blogs.classList.add('active')
+                contentElements.forEach((content) => {
+                    const contentElement = document.getElementById(content);
+                    if (content === contentElements[index]) {
+                        contentElement.style.display = 'block';
+                    } else {
+                        contentElement.style.display = 'none';
+                    }
+                });
+
+                // Save the active element to localStorage
+                localStorage.setItem('activeElement', element);
             });
-        }
+        });
+
+        // Load the active section from localStorage when the page loads
+        window.addEventListener('load', function() {
+        const activeElement = localStorage.getItem('activeElement');
+            if (activeElement) {
+                document.getElementById(activeElement).click();
+            }
+        });
+
     </script>
-    {% endblock %}
+{% endblock %}
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Riri Njaramba - Projects {% endblock %}
+
+{% block content %}
+
+<div class="work">
+    <h2>Jambo, Welcome to my projects page.</h2>
+    <h3>Don't hesitate to go through them.</h3>
+    <div class="projects">
+        <p></p>
+    </div>
+    <h3>What some of my clients are saying.</h3>
+    <div class="user-feed">
+        <div class="feeds"></div>
+        {% for feed in feedback %}
+        <div class="feed-card">
+            <div class="feed-header">
+                <h4>{{ feed.email }}</h4>
+            </div>
+            <div class="feed-body">
+                {{ feed.feed }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

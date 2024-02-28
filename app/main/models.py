@@ -18,3 +18,16 @@ class Feedback(db.Model):
 
     def __repr__(self):
         return f"Feedback(id={self.id}, email='{self.email}', feed='{self.feed}')"
+
+class Quotes(db.Model):
+    __tablename__ = "quotes"
+    
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(64), nullable=False)
+    service = db.Column(db.String(50), nullable=False, index=True)
+    description = db.Column(db.Text(), nullable=False)
+    sent = db.Column(db.DateTime(), default=datetime.now(tz=timezone.utc))
+    
+    def __repr__(self) -> str:
+        return f"Service: {self.service}"

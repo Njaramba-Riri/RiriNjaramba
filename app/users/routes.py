@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template , url_for, abort
 
 from ..auth.models import Permission, User, Role
-from ..blogs.models import Posts
+from ..blogs.models import Posts, Comments
 
 user_blueprint = Blueprint("users", __name__,
                            static_folder="static/users", template_folder="template/users",
@@ -13,4 +13,5 @@ def user(username):
     if not user:
         abort(404)
     posts = user.posts.order_by(Posts.date_created.desc()).all()
-    return render_template("/users/user.html", user=user, posts=posts)
+    comments = user.comments.order_by(Comments.date.desc()).all()
+    return render_template("/users/user.html", user=user, posts=posts, comments=comments)

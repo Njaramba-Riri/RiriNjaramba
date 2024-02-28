@@ -17,6 +17,14 @@ moment = Moment()
 bootstrap = Bootstrap()
 pagedown = PageDown()
 
+def forbidden_access(e):
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({
+            "Error": "Forbidden Access."
+        })
+        response.status_code = 403
+    return render_template('/errors/403.html'), 403
+
 def not_found(e):
     if request.accept_mimetypes.accept_json and \
         not request.accept_mimetypes.accept_html:
@@ -65,9 +73,11 @@ def create_app(object):
     auth_create_app(app)
     admin_create_app(app)
     users_create_app(app)
-
+    
+    app.register_error_handler(403, forbidden_access)
     app.register_error_handler(404, not_found)
     app.register_error_handler(405, method_not_allowed)
     app.register_error_handler(500, internal_server_error)
+ 
 
     return app

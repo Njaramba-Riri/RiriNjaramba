@@ -1,11 +1,22 @@
 <div class="sidebar" id="sidebar">
     <header>
-        <img src="{{ url_for('static', filename='images/riri.jpg')}}" alt="Njaramba">
-        <div class="tags">
-            <h3>MLOPs <span>|</span></h3>
-            <h3>ML Engineering <span>|</span></h3>
+        <div class="tab">
+            <img src="{{ url_for('static', filename='images/riri.jpg')}}" alt="Njaramba">
+            <div class="toggle">
+                <p><a href="{{ url_for('mainapp.index') }}">Riri<span>Njaramba</span></a></p>
+                <button class="close-button" id="menu-button" title="Close">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        <div class="tags" title="Experienced in...">
+            <h3 title="Machine Learning.">ML<span>|</span></h3>
+            <h3 title="Machine Learning Operations.">MLOPs <span>|</span></h3>
+            <h3 title="Web and API development.">Flask <span>|</span></h3>
             <h3>Python <span>|</span></h3> 
-            <h3>Flask <span>|</span></h3>
+            <h3>C++ <span>|</span></h3>
             <h3>CSS <span>|</span></h3>
         </div>
     </header>
@@ -17,31 +28,31 @@
             </a>
         </li>
         <li>
-            <a href="">
+            <a href="{{ url_for('blogs.blog_index') }}">
                 <span>Blogs</span>
                 <ion-icon name="book-outline"></ion-icon>
             </a>
             </li>
         <li>
-            <a href="">
+            <a href="{{ url_for('mainapp.projects') }}">
                 <span>Projects</span>
                 <ion-icon name="laptop-outline"></ion-icon>
             </a>
         </li>
         <li>
-            <a href="">
+            <a href="{{ url_for('mainapp.letstalk') }}">
                 <span>Get in touch</span>
                 <ion-icon name="chatbubbles-outline"></ion-icon>
             </a>
-            </li>
+        </li>
         <li>
-            <a href="">
+            <a href="{{ url_for('mainapp.resources') }}">
                 <span>Resources</span>
                 <ion-icon name="globe-outline"></ion-icon>
             </a>
         </li>
         <li>
-            <a href="">
+            <a href="#" title="theme">
                 <span>Theme</span>
                 <ion-icon name="sunny-outline"></ion-icon>
             </a>

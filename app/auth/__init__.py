@@ -1,7 +1,7 @@
 from functools import wraps
 
 from flask import abort
-from flask_login import LoginManager, AnonymousUserMixin
+from flask_login import LoginManager, AnonymousUserMixin, login_manager
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_jwt_extended import JWTManager
@@ -23,9 +23,22 @@ def load_user(user_id):
     from .models import User
     return User.query.get(user_id)
 
-class VisitorAnonymous(AnonymousUserMixin):
+class AnonymousUser(AnonymousUserMixin):
     def __init__(self):
+        super().__init__()
         self.username = "Ariff"
+        self.email = "anonymoususer@gmail.com"
+   
+    def gravatar(self, size):
+        return False
+    
+    def can(self, permissions):
+        return False
+    
+    def is_administrator(self):
+        return False
+
+login.anonymous_user = AnonymousUser
 
 def permission_required(permission):
     def decorator(f):
@@ -42,7 +55,7 @@ def admin_required(f):
     return permission_required(Permission.ADMINISTER)(f)
 
 def create_app(app, **kwargs):
-    """Creates and registers authentication blueprint int the main app.
+    """Creates and registers authentication blueprint into the main app.
 
     Args:
         app (Any): An instance of flask app.

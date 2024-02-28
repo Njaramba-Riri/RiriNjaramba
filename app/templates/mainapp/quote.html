@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% import  'macros/_form.html' as macro %}
+
+{% block title %}Riri NJaramba - Get Quote {% endblock %}
+
+{% block content %}
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
+<div class="quote">
+    <div class="warm">
+        <h2>Hello and thank you for showing interest in my services.</h2>
+        <h3>How can I be of service to you?.</h3>        
+    </div>
+    <div class="quote-form">
+        <form action="{{ url_for('.quote') }}" method="post">
+            {{ form.hidden_tag() }}
+            {% for field in form %}
+            {% if field.widget.input_type != 'hidden' %}
+                {% if field.type == 'StringField' or  field.type == 'SelectField' %}
+                <div class="quote-field">
+                    {{ field.label(class_='label') }}
+                    {% if field.name == 'email' %}
+                        <small style="padding-left: .5rem; color: brown;"><i class="fa fa-info-circle"></i> Reacheable email address.</small>
+                    {% endif %}
+                    {{ field(class_='input') }}
+                    {% if field.errors %}
+                        {% for e in field.errors %}
+                        <p class="help-block errors">{{ e }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% elif field.type == 'TextAreaField' %}
+                <div class="quote-field">
+                    {{ field.label(class_='label') }}
+                    {{ field(class_='quote-area') }}
+                    {% if field.errors %}
+                        {% for e in field.errors %}
+                        <p class="help-block errors">{{ e }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endif %}
+            {% endfor %}
+            <button type="submit" class="submit-quote">
+                <span class="btn-text">Get Quote</span>
+                <div class="btn-loader">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </button>
+        </form>
+    </div>
+    <div class="alt">
+        <p>Alternatively, you can send me an <a href="mailto:jamesriri03@gmail.com">email</a>.</p>
+    </div>
+</div>
+{% block js %}
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+    <script>
+        const inputs = document.querySelectorAll("input");
+
+        inputs.forEach((input) => {
+            input.addEventListener('click', function(event){
+                inputs.forEach((otherInputs) => {
+                    otherInputs.classList.remove('clicked');
+                });
+                this.classList.add('clicked');
+                // window.addEventListener('click', ()=>{
+                //     this.classList.remove('clicked');
+                // })
+            });
+        });
+    </script>
+{% endblock %}
+{% endblock %}

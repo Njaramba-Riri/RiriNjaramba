@@ -1,4 +1,4 @@
-<nav>
+<nav id="nav">
     <ul>
         <li>
             <a href="{{ url_for('blogs.blog_index') }}">Blogs</a>
@@ -7,11 +7,16 @@
             <a href=""><i class="fa-regular fa-bell"></i></a>
         </li>
         <li>
+            {% if not current_user.is_anonymous %}
             <a href="{{ url_for('users.user', username=current_user.username) }}">
                 <img src=" {{current_user.gravatar(size=28) }}" alt="profile picture">
                 {{ current_user.username | title }}
             </a>
+            {% else %}
+                <a href="" title="Anonymous user">
+                    {{ current_user.username }}
+                </a>
+            {% endif %}
         </li>
     </ul>
 </nav>
-
