@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% import 'macros/pagination.html' as pagin %}
+
+{% block title %}Comments Moderation - {{ current_user.username | title }} {% endblock %}
+
+{% block content %}
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
+<div class="moderate">
+    {% set moderate = True %}
+    <div class="comments">
+        <h2>Comment Moderation</h2>
+        {% for comment in comments %}
+            <div class="vomment">
+                <div class="comm-user">
+                    
+                    {% if comment.author.gravatar %}
+                        <img src="{{ comment.author.gravatar(256) }}" alt="">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='/images/user.png')}}" alt="">
+                    {% endif %}
+                    <h3><a href="{{ url_for('users.user', username=comment.name) }}">{{ comment.name | title}} </a></h3>
+                    <p class="date"><i class="fa fa-clock"></i> {{ moment(comment.date).fromNow() }}</p>
+                </div>
+                <div class="comment-body">
+                    {% if comment.disabled %}
+                        <p class="disabled"><i class="fa fa-warning"></i> This comment has been disabled by a moderator.</p>
+                    {% endif %}
+                    {% if moderate or not comment.disabled %}
+                        {% if comment.comment_html %}
+                            {{ comment.comment_html | safe }}
+                        {% else %}
+                            {{ comment.comment }}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="actions">
+                {% if moderate %}
+                    {% if comment.disabled %}
+                        <a class="btn btn-info btn-xs" href="{{ url_for('.moderate_enable', id=comment.id, page=page) }}">Enable</a>
+                    {% else %}
+                        <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable', id=comment.id, page=page) }}">Disable</a>
+                    {% endif %}                
+                {% endif %}
+                </div>            
+            </div>
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        {% if pagination %}
+            {{ pagin.pagination_widget(pagination, '.moderate') }}
+        {% endif %}     
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+    {{ pagedown.include_pagedown() }}
+{% endblock %}
