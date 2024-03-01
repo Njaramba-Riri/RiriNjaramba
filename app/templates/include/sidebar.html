@@ -21,11 +21,10 @@
         </div>
     </header>
     <ul >
-        <li>
-            <a href="">
-                <span>My CV</span>
-                <ion-icon name="document-outline"></ion-icon>
-            </a>
+        <li id="about-me" data-url="{{ url_for('users.user', username='James') }}#whome">
+            <span>My CV
+            <ion-icon name="document-outline"></ion-icon>
+        </span>
         </li>
         <li>
             <a href="{{ url_for('blogs.blog_index') }}">
@@ -49,12 +48,6 @@
             <a href="{{ url_for('mainapp.resources') }}">
                 <span>Resources</span>
                 <ion-icon name="globe-outline"></ion-icon>
-            </a>
-        </li>
-        <li>
-            <a href="#" title="theme">
-                <span>Theme</span>
-                <ion-icon name="sunny-outline"></ion-icon>
             </a>
         </li>
     </ul>

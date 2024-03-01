@@ -26,7 +26,7 @@
             {% if current_user == user %}
                 <h2>Some of your latest blogs.</h2>
             {% else %}
-                <h2>Posts by {{ user }}</h2>
+                <h2>Posts by {{ user.username }}</h2>
             {% endif %}
             <div class="recent-posts">
                 {% for blog in pagination %}
@@ -60,9 +60,9 @@
         </div>
     </div>
 </div>
+{% endblock %}
 {% block js %}
     {{ super() }}
     {{ pagedown.include_pagedown() }}
     {{ moment.include_moment() }}
-{% endblock %}
 {% endblock %}

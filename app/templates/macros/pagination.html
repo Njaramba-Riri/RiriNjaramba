@@ -1,15 +1,15 @@
 {% macro pagination_widget(pagination, endpoint) %}
-    <ul class="pagination">
+    <ul class="paginaation">
         <li {% if not pagination.has_prev %} class="disabled" {% endif %} >
             <a href="{% if pagination.has_prev %} {{ url_for(endpoint, page = pagination.page - 1, **kwargs) }}
                 {% else %} # {% endif %}">
                 &laquo;
             </a>
         </li>
-        {% for p in pagination.iter_pages(left_edge=2, left_current=2, right_current=5, right_edge=2) %}
+        {% for p in pagination.iter_pages(left_edge=1, left_current=0, right_current=1, right_edge=0) %}
             {% if p %}
                 {% if p == pagination.page %}
-                    <li class="active">
+                    <li class="active" >
                         <a href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ p }}</a>
                     </li>
                 {% else %}

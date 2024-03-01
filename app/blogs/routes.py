@@ -7,13 +7,13 @@ logging.getLogger().setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 from flask import Blueprint, render_template, url_for, request, flash, redirect, session, abort, current_app
-from flask_login import current_user
+from flask_login import current_user, login_required
 from sqlalchemy import exc
 
 from app import db
 from .models import Posts, Comments, CommentReply, Tag
 from .forms import BlogPost, CommentForm, replyCommentForm
-from ..auth import permission_required, admin_required 
+from ..auth import permission_required, admin_required
 from ..auth.models import Permission
 
 blog_blueprint = Blueprint("blogs", __name__, static_folder="/blogs/static",
@@ -37,48 +37,66 @@ def blog(title):
     pagination = db.paginate(comments, page=page, per_page=5, error_out=False)
     next_url = url_for('blogs.blog', title=post.title, page=pagination.next_num) if pagination.has_next else None
     prev_url = url_for('blogs.blog', title=post.title, page=pagination.prev_num) if pagination.has_prev else None
-    replies = CommentReply.query.all()
+    replies = CommentReply.query.order_by(CommentReply.date.desc()).all()
+        
     form = CommentForm()
     reply_form = replyCommentForm()
     if form.validate_on_submit():
         comment = Comments()
         comment.email = form.email.data
         comment.name = form.name.data
-        comment.author = current_user._get_current_object()
+        comment.blog = post
+        if current_user.is_authenticated: 
+            comment.author = current_user._get_current_object()
         comment.comment = form.mawoni.data
         comment.blog_id = post.post_id
         try:
             db.session.add(comment)
             db.session.commit()
             flash("Your comment was submitted successfully.", category="info")
-            return redirect(url_for('blogs.blog', title=title))
+            return redirect(url_for('blogs.blog', title=title, page=-1))
         except Exception as e:
+            db.session.rollback()
             logger.info("Error while adding comment: {}".format(e))
             flash("Error: {}".format(e), category="warning")
-            db.session.rollback()
-    page = request.args.get('page', 1, type=int)
+    page = request.args.get('page', 1, type=int)     
     if page == -1:
         page = (post.comments.count() -1) / current_app.config['COMMENTS_PER_PAGE'] + 1
-        pagination  = post.comments.order_by(Comments.date.desc()).paginate(
-            page=page, per_page=current_app.config['COMMENTS_PER_PAGE'], error_out=False
+    pagination  = post.comments.order_by(Comments.date.asc()).paginate(
+        page=page, per_page=current_app.config['COMMENTS_PER_PAGE'], error_out=False
         )
-
-        comments = pagination.items
-
+    comments = pagination.items
+        
     if reply_form.validate_on_submit():
-        reply = CommentReply(reply=reply_form.reply.data, comment_id=reply_form.comment_id.data)
+        if current_user.is_authenticated:
+            email = current_user.email 
+            name = current_user.username
+        else:
+            email = reply_form.email.data
+            name = reply_form.name.data
+            
+        reply = CommentReply(email=email, name=name,
+                             reply=reply_form.reply.data, comment_id=reply_form.comment_id.data)
         try:
             db.session.add(reply)
             db.session.commit()
+            
             flash("Reply sent successfully", category="info")
             return redirect(url_for('blogs.blog', title=title))
-        except exc.IntegrityError as e:
-            logger.error("User reply could not be sent: {}".format(e))
+        except Exception as e:
             db.session.rollback()
+            flash(f"Reply not sent: {e}", category="warning")
+            logger.error("User reply could not be sent: {}".format(e))
+            
     return render_template("blogs/blog.html", blog=post, 
-                           form=form, reply=reply_form, replies=replies, comments=comments,
+                           form=form, reply=reply_form, replies=replies, 
+                           comments=comments, pagionation=pagination, enumerate=enumerate,
                            comment=pagination.items, next=next_url, prev=prev_url, permission=Permission)
 
+
+@blog_blueprint.route('/reply', methods=['POST'])
+def comment_reply():
+    form = request.files['form']
 
 @blog_blueprint.route('/post/<int:id>')
 def post(id):
@@ -86,6 +104,7 @@ def post(id):
     return redirect(url_for('blogs.blog', title=post.title))
 
 @blog_blueprint.route('/new', methods=['POST', 'GET'])
+@login_required
 @permission_required(Permission.WRITE_ARTICLE)
 def new_blog():
     blogs = Posts.query.order_by(Posts.date_created.desc())
@@ -130,3 +149,32 @@ def edit_blog(title):
     return render_template("blogs/new_blog.html", form=form, title=session.get('title'),
                             permission=Permission, pagination=pagination, user=blog.author)
 
+
+@blog_blueprint.route("/moderate-comments/")
+def moderate():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comments.query.order_by(Comments.date.desc()).paginate(
+        page=page, per_page=current_app.config['COMMENTS_PER_PAGE'], error_out=False
+    )
+    comments = pagination.items
+    
+    return render_template("blogs/moderate.html", pagination=pagination,
+                           comments=comments, page=page, permission=Permission)
+    
+@blog_blueprint.route("/comment/enable/<int:id>")
+def moderate_enable(id):
+    comment = Comments.query.get_or_404(id)
+    comment.disabled = False
+    db.session.add(comment)
+    db.session.commit()
+    
+    return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
+
+@blog_blueprint.route("/comment/disable/<int:id>")
+def moderate_disable(id):
+    comment = Comments.query.get_or_404(id)
+    comment.disabled = True
+    db.session.add(comment)
+    db.session.commit()
+    
+    return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))

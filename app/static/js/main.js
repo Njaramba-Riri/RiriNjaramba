@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             if(message){
                 message.classList.add('clear');
             }
-        }, 2000)
+        }, 5000)
     }
 
     function stopTimer(){
@@ -85,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const nav = document.querySelector("#nav");
     const sidebar = document.querySelector("html[sidebar-open] ")
     const close = document.querySelector(".close-button");
+    const about = document.getElementById("about-me");
+    const theme = document.getElementById("theme");
 
     window.addEventListener('scroll', () => {
        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20){
@@ -97,7 +99,40 @@ document.addEventListener('DOMContentLoaded', () => {
             nav.classList.remove('scrolled');
         } 
     });
+    about.addEventListener('click', function(){
+        var targetAbout = document.getElementById("blogs");
+        if (!targetAbout){
+            targetAbout = document.createElement('div');
+            targetAbout.id = 'whome';
+            document.body.append(targetAbout);
+        }
 
+        targetAbout.scrollIntoView({behaviour: 'smooth'});
+
+        setTimeout(function(){
+            var url = document.getElementById('about-me').dataset.url;
+            window.location.href = url;
+        }, 500);
+    });
+    
+    // if (theme){
+    //     theme.addEventListener('click', function(){
+    //         document.body.classList.toggle('dark-theme');
+    //     });
+    // }
+    // function toggleTheme(){
+    //     document.body.classList.toggle('dark-theme');
+
+    //     var isDarkTheme = document.body.classList.contains('dark-theme');
+    //     localStorage.setItem('theme', isDarkTheme ? 'dark': 'light');
+    // }
+
+    // var savedTheme = localStorage.getItem('theme');
+    // if (savedTheme === 'dark'){
+    //     document.body.classList.add('dark-theme');
+    // }
+
+    
     if(close){
         // close.style.background = 'red';
         close.addEventListener('click', ()=>{
@@ -189,19 +224,27 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
 });
+
 document.addEventListener("DOMContentLoaded", (event) => {
-    var open_reply = document.querySelectorAll(".open-reply");
-    var reply = document.querySelectorAll(".reply-comment");
+    const openReplyButtons = document.querySelectorAll(".open-reply");
+    const replyComments = document.querySelectorAll(".reply-comment");
 
-    open_reply.forEach((button, index) => {
-        button.addEventListener('click', function(){
-            // Close all replies
-            reply.forEach((reply) => {
-                reply.classList.remove('active');
-            });
-
-            // Open the specific reply
-            reply[index].classList.toggle('active');
+    openReplyButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            // Toggle the "active" class on the corresponding reply comment
+            replyComments[index].classList.toggle("active");
+            // replyComments.forEach((otherComments) => {
+            //     otherComments.classList.remove('active');
+            // })
+            
+            // Update the button text
+            if (replyComments[index].classList.contains("active")) {
+                button.textContent = "Close discussion.";
+                button.style.color = 'brown';
+            } else {
+                button.textContent = "Open discussion.";
+                button.style.color = '';
+            }
         });
     });
 });

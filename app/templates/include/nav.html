@@ -11,12 +11,15 @@
         <nav>
             <ul>
                 <li><a href=""></span></a></li>
-                <li id="service"><p>Services</p></li>
-                <li id="project"><p>Projects</p></li>
-                <li><a href="{{ url_for('blogs.blog_index') }}">Blogs</a></li>
+                <li id="service"><a href="{{ url_for('mainapp.index') }}#services">Services</a></li>
+                <!-- <li id="project"><p>Projects</p></li> -->
+                <!-- <li><a href="{{ url_for('blogs.blog_index') }}">Blogs</a></li> -->
                 <li id="quote">
                     <a href="{{ url_for('mainapp.quote') }}">Get a Quote</a>
                 </li>
+                {% if current_user.can(permission.MODERATE_COMMENTS ) %}
+                <li><a href="{{ url_for('blogs.moderate') }}">Moderate Comments</a></li>
+                {% endif %}
                 {%  if current_user.is_authenticated %}
                  <li id="dropdown"><a href="">{{ current_user.username | upper }}</a></li>
                  <li> <a href="{{ url_for('auth.logout') }}">Logout</a></li>
@@ -34,8 +37,6 @@
                             </li>                            
                         </div>
                     </ul> -->
-                {% else %}
-                    <li id="account"><a href="{{ url_for('auth.signin') }}">Login</a></li>
                 {% endif %}
             </ul>
         </nav>

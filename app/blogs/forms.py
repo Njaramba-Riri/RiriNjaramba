@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import RecaptchaField
 from wtforms import StringField, SubmitField, TextAreaField, HiddenField
-from wtforms.validators import Email, DataRequired, Optional, Length
+from wtforms.validators import Email, DataRequired, Length, Regexp
 from flask_pagedown.fields import PageDownField
 
 class BlogPost(FlaskForm):
@@ -30,6 +30,13 @@ class replyCommentForm(FlaskForm):
     Args:
         FlaskForm (Form): Base form class.
     """
-    reply = TextAreaField("Type your reply...", validators=[DataRequired(), Length(max=200, message="Replies shouldn't be that long jameni. Eiyyy.")])
+    email = StringField("Your email address", validators=[Length(min=10, max=64), DataRequired(),
+                                                          Email()])
+    name = StringField("Your name", validators=[DataRequired(),
+                                                Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, \
+                                                             'Usernames must have only letters, numbers, dots or underscores')])
+    reply = TextAreaField("Your reply goes here...", validators=[DataRequired(), Length(max=200, message="Replies shouldn't be that long jameni. Eiyyy.")])
     comment_id = HiddenField("Comment ID", validators=[DataRequired()])
+    # captcha = RecaptchaField()
     submit = SubmitField("Reply.")
+    

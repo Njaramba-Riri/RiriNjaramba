@@ -51,7 +51,8 @@ def signin():
             login_user(user, remember=form.remember.data)
             next_url = request.args.get('next')
             if next_url:
-                return redirect(url_for(next_url))
+                flash("You have been logged in", category="info")
+                return redirect(next_url)
             flash(f"{current_user.username }, you have been logged in, welcome.", category="info")
             return redirect(url_for('mainapp.index'))
         flash("Wrong credentials, kindly try again.", category="warning")

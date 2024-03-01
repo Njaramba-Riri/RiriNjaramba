@@ -86,23 +86,20 @@ class Comments(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(64), unique=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    comment = db.Column(db.Text(), nullable=False)
-    comment_html = db.Column(db.Text())
+    comment = db.Column(db.Text, nullable=False)
+    comment_html = db.Column(db.Text)
     disabled = db.Column(db.Boolean())
     blog_id = db.Column(db.Integer(), db.ForeignKey('Blogs.post_id'))
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))    
-    date = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
+    date = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
 
     @staticmethod
-    def on_changed_body(value, target, oldvalue, initiator):
-        allowed_tags = [
-            'a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong'
-        ]
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong']
 
         target.comment_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, strip=True
-        ))
+            tags=allowed_tags, strip=True))
 
 
     def __repr__(self) -> str:
@@ -119,6 +116,8 @@ class CommentReply(db.Model):
     __tablename__ = "comment_reply"
 
     reply_id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.String(64), unique=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
     reply = db.Column(db.Text(), nullable=False)
     date = db.Column(db.DateTime(), default=datetime.now(timezone.utc))
     comment_id = db.Column(db.Integer(), db.ForeignKey('Blog Comments.id'))

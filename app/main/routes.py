@@ -1,9 +1,13 @@
+import random
+
 from flask import Blueprint, render_template, redirect, request, flash, abort, url_for
 from flask_login import login_required
+
+from app import db
 from .forms import FeedbackForm, quoteForm
 from .models import Feedback, Quotes
-from ..auth.models import User
-from app import db
+from ..auth.models import User, Permission
+
 
 main_blueprint = Blueprint("mainapp", __name__,
                            static_folder='static/mainapp', template_folder='templates/mainapp',
@@ -24,7 +28,7 @@ def index():
         except Exception as e:
             db.session.rollback()
             flash(f"Something didn't go right, kindly try again: {e}", category="warning")
-    return render_template('/mainapp/index.html', form=form)
+    return render_template('/mainapp/index.html', form=form, permission=Permission)
 
 @main_blueprint.route('/get-quote/', methods=['GET', 'POST'])
 def quote():
@@ -45,12 +49,13 @@ def quote():
         except Exception as e:
             db.session.rollback()
             flash("Quote not sent, kindly try again.", category="warning")
-    return render_template('/mainapp/quote.html', form=form)
+    return render_template('/mainapp/quote.html', form=form, permission=Permission)
 
 @main_blueprint.route('/projects', methods=['GET', 'POST'])
 def projects():
     feedback = Feedback.query.order_by(Feedback.created_at.desc()).all()
-    return render_template("/mainapp/projects.html", feedback=feedback)
+    feedback = random.sample(feedback, min(len(feedback), 12))
+    return render_template("/mainapp/projects.html", feedback=feedback, permission=Permission)
 
 @main_blueprint.route('/lets-talk', methods=['GET', 'POST'])
 def letstalk():

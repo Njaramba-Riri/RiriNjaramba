@@ -3,26 +3,149 @@
 {% block title %}Riri Njaramba - Projects {% endblock %}
 
 {% block content %}
-
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
 <div class="work">
-    <h2>Jambo, Welcome to my projects page.</h2>
-    <h3>Don't hesitate to go through them.</h3>
     <div class="projects">
-        <p></p>
-    </div>
-    <h3>What some of my clients are saying.</h3>
-    <div class="user-feed">
-        <div class="feeds"></div>
-        {% for feed in feedback %}
-        <div class="feed-card">
-            <div class="feed-header">
-                <h4>{{ feed.email }}</h4>
-            </div>
-            <div class="feed-body">
-                {{ feed.feed }}
-            </div>
+        <div class="jello">
+            <h3>It's time to explore!. Are your boots ready?.</h3>
+            <!-- <small style="color: brown;"><i class="fa fa-info-circle"></i> Hover over each project for more details.</small>             -->
         </div>
-        {% endfor %}
+        <ul class="gallery">
+            <li>
+                <figure>
+                    <a href="https://github.com/Njaramba-riri/hospital">
+                        <img src="{{ url_for('static', filename='/images/projects/admin.jpg') }}" alt="" srcset="">
+                    </a>
+                    <figcaption>
+                        <main>
+                            <p class="small">
+                                <span><i class="fa fa-sun"></i> City Health Clinic</span>
+                            </p>
+                            <h3>Hospital Management System</h3>
+                            <p> 
+                                An end-to-end hospital management system that streamlines delivery of healthcare by giving both the healthcare
+                                professionals as well a patients a simple, straightforward, accurate way to offer and get services.
+                            </p>
+                        </main>
+                        <footer>
+                            <div>
+                                <p class="small browse">View Demo</p>
+                                <i class="fa fa-arrow-right"></i>
+                            </div>
+                        </footer>
+                    </figcaption>
+                </figure>
+            </li>
+            <li>
+                <figure>
+                    <a href=""><img src="{{ url_for('static', filename='/images/projects/proj1.png') }}" alt="" srcset=""></a>
+                    <figcaption>
+                        <main>
+                            <p class="small">
+                                <span><i class="fa fa-sun"></i> LetsGo Predictive System</span>
+                            </p>
+                            <h3>ML Web Application</h3>
+                            <p>
+                                A fully-fledged web aplication powered by the power of predictive modelling.
+                                LetsGo, is a simple but yet a very enhanced predictive system that leverages the power of 
+                                Machine Learning to make predictions. The application makes predictions from the details submitted
+                                by the user such as age group, country of origin, etc. to "correctly".  
+                            </p>
+                        </main>
+                        <footer>
+                            <div>
+                                <p class="small browse">View Demo</p>
+                                <i class="fa fa-arrow-right"></i>
+                            </div>
+                        </footer>
+                    </figcaption>
+                </figure>
+            </li>
+            <li>
+                <figure>
+                    <a href=""><img src="{{ url_for('static', filename='/images/projects/proj2.png') }}" alt="" srcset=""></a>
+                    <figcaption>
+                        <main>
+                            <p class="">
+                                <span><i class="fa fa-sun"></i>Model Monitoring</span>
+                            </p>
+                            <h3>LetsGo Experiment Monitoring</h3>
+                            <p>
+                                By using a diverse array of tools, LetsGo predictive model, can be monitored closely to enable 
+                                all the stakeholders included experience optimal performance from the model. 
+                            </p>
+                        </main>
+                        <footer>
+                            <div>
+                                <p class="small browse">View Demo</p>
+                                <i class="fa fa-arrow-right"></i>
+                            </div>
+                        </footer>
+                    </figcaption>
+                </figure>
+            </li>                
+            <li>
+                <figure>
+                    <a href=""><img src="{{ url_for('static', filename='/images/projects/accounts.jpg') }}" alt="" srcset=""></a>
+                    <figcaption>
+                        <main>
+                            <p class="">
+                                <span><i class="fa fa-sun"></i>Data Analysis</span>
+                            </p>
+                            <h3>Financial Analysis</h3>
+                            <p>
+                                Diving deeper into the East African residents bank details, the application makes use of the 
+                                PowerBi.   
+                            </p>
+                        </main>
+                        <footer>
+                            <div>
+                                <p class="small browse">View Charts</p>
+                                <i class="fa fa-arrow-right"></i>
+                            </div>
+                        </footer>
+                    </figcaption>
+                </figure>
+            </li>                
+        </ul> 
+        <p class="extra">
+            <small style="color: brown;">
+            <i class="fa fa-info-circle"></i> 
+                Feel free to contribute to any of these on my <a href="https://github.com/Njaramba-Riri">GitHub</a>.
+            </small>
+        </p>
+    </div>
+    <div class="user-feed">
+        <h3>What clients are saying.</h3>
+        <div class="feed-cards">
+        {% for feed in feedback %}
+            <div class="feed-card">
+                <div class="feed-header">
+                    <img src="{{ url_for('static', filename='/images/user.png')}}" alt="">
+                    <h4><span>{{ feed.email | title | truncate(10) }}</span></h4>
+                </div>
+                <div class="feed-body">
+                    <p>{{ feed.feed }}</p>
+                </div>
+            </div>
+        {% endfor %}            
+        </div>
+    </div>
+    <div class="ready">
+        <h3>Ready to be my next client?.</h3>
+        <div class="reach">
+            <p>
+                Don't hesitate to <a href="mailto:jamesriri03@gmail.com" target="_blank">contact</a> me.
+            </p>
+            <p>Me and you?. M-A-G-I-C.</p>
+            <p>:))</p>   
+        </div>
+    </div>
+    <hr>
+    <div class="footer">
+        <p>&copy;All rights reserved.2024</p>
+        <p>Made with <i class="fa fa-heart"></i> and <i class="fa fa-fire"></i> by Riri.</p>
     </div>
 </div>
 {% endblock %}

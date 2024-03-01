@@ -9,7 +9,16 @@
     <div class="items">
         <div class="blog">
             <div class="header">
-                <h2>{{ blog.title }}</h2>
+                <a href="{{ url_for('.blog', title=blog.title) }}#comments">
+                    <span class="label label-primary">
+                    {{ blog.comments.count() }} Comments
+                    </span>
+                </a>
+                {% if blog.title_html %}
+                    <h2>{{ blog.post_html | safe }}</h2>
+                {% else %}
+                    <h2>{{ blog.title }} </h2>
+                {% endif %}
             </div>
             <div class="overview">
                 <p>Posted by: <span><a href="{{ url_for('users.user', username=blog.post_author)}}">{{ blog.post_author }}</a></span> </p>
@@ -34,7 +43,7 @@
             </div>
         </div>
         <div class="comments">
-            <h3>Blog comments.</h3>
+            <h3 id="comments">Blog comments.</h3>
             {% if not comments %}
                 <div class="go-comment">
                     <p>
@@ -44,61 +53,120 @@
                 </div>
             {% endif %}
             {% for comment in comments %}
-            <div class="blog-comment">
-                <div class="author">
-                    <div class="name">
-
-                        <p>
-                            <span>{{  moment(comment.date).fromNow() }}</span>
-                            <span>{{ comment.name }},</span>
-                        </p>
-                    </div>                    
-                    <div class="date">
-                        <p>said:</p>
-                    </div>                    
-                </div>
-                <div class="authored">
-                    <div class="reply">
-                        {{ comment.comment }}
-                    </div>
-                </div>   
-                <div class="replies">
-                    {% for reply in replies %}
-                        {% if reply.comment_id == comment.id %}
-                        {{ reply.reply }}
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <div class="discussion">
-                    <div class="reply">
-                        {% if current_user.is_anonymous %}
-                            <p class="open-reply" title="Sign in so you can reply to {{ comment.name }}">Sign in to reply.</p>
-                        {% else %}
+                {% if not comment.disabled %}
+                    <div class="blog-comment">
+                        <div class="author">
+                            <div class="name">
+                                <p>
+                                    <span>{{  moment(comment.date).fromNow() }}</span>
+                                    <span>{{ comment.name }},</span>
+                                </p>
+                            </div>                    
+                            <div class="date">
+                                <p>said:</p>
+                            </div>                  
+                        </div>
+                        <div class="authored">
+                            <div class="reply">
+                                {{ comment.comment }}
+                            </div>
+                        </div>   
+                        <div class="discussion reply">
                             <p class="open-reply" title="Reply to {{ comment.name }}.">Open discussion.</p>
-                        {% endif %}
+                        </div>
+                        <div class="discussion">
+                            <div class="reply-comment">
+                                <div class="replies">
+                                    {% if replies %}
+                                        <p>Comment replies</p>
+                                        {% for i, reply in enumerate(replies, start=1) %}
+                                            {% if reply.comment_id == comment.id %}
+                                                <div class="reply" aria-label="close">
+                                                    <!-- <p></p> -->
+                                                    
+                                                    <p><span class="rep-id" id="rep-id">#{{ i }}</span> 
+                                                        On <span>{{ moment(reply.date).format('LL') }}</span>
+                                                        <span> {{ reply.name }}</span>said: </p> 
+                                                    <p>{{ reply.reply }}</p>                          
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>                        
+                                {% if current_user.is_anonymous %}
+                                    <div class="sign">
+                                        <p id="sign" onclick="goSign()" title="Sign in so you can reply to {{ comment.name }}" 
+                                        data-url="{{ url_for('auth.signin') }}">Sign in to reply.</p>
+                                    </div>
+                                    <p class="mid">or</p>
+                                {% endif %}
+                            <form action="{{ url_for('blogs.blog', title=blog.title) }}" method="post">
+                                    {{ reply.hidden_tag() }}
+                                    {% for field in reply %}
+                                        {% if field.type == 'HiddenField' %}
+                                            {{ field(value=comment.id) }}
+                                        {% elif field.type == 'StringField' %}
+                                            {% if current_user.is_anonymous %}
+                                                {% if field.name == 'email' %}
+                                                    <div class="input-reply">
+                                                        {{ field.label }}
+                                                        <small><i class="fa fa-info-circle"></i> Your email won't be shared.</small>
+                                                        {{ field(class_='reply-input') }}
+                                                    </div>
+                                                {% else %}
+                                                    <div class="input-reply">
+                                                        {{ field.label }}
+                                                        <small><i class="fa fa-info-circle"></i> This will be shared.</small>
+                                                        {{ field(class_='reply-input') }}                                                
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}  
+                                            {% if field.errors %}
+                                            {% for e in field.erros %}
+                                            <p class="help-block">{{e}}</p>
+                                            {% endfor %}
+                                            {% endif %}                              
+                                        {% elif field.type == 'TextAreaField' %}
+                                            <div class="actual">
+                                                {{ field(class_='text-area', placeholder=field.label.text) }}
+                                            </div>
+                                        {% else %}
+                                            {% if current_user.is_authenticated %}
+                                                <div class="" title="Replying to {{ comment.name | truncate(15) | title }}  as {{ current_user.username | title }}">
+                                                    {{ field(class_='reply-btn') }}
+                                                </div>
+                                            {% else %}
+                                                <div class="">
+                                                    {{ field(class_='reply-btn') }}
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}                                    
+                                    {% endfor %}
+                            </form>                      
+                            </div>
+                        </div>             
                     </div>
-                    <div class="reply-comment">
-                       <form action="{{ url_for('blogs.blog', title=blog.title) }}" method="post">
-                            <!-- {{ reply.hidden_tag() }} -->
-                            {% for field in reply %}
-                                <div class="reply-fields">
-                                    {% if field.type == 'HiddenField' %}
-                                        {{ field(value=comment.id) }}
-                                    {% elif field.type == 'TextAreaField' %}
-                                        <div class="actual">
-                                            {{ field(class_='text-area', placeholder=field.label.text) }}
-                                        </div>
-                                    {% else %}
-                                        <div class="">
-                                            {{ field(class_='reply-btn') }}
-                                        </div>
-                                    {% endif %}                                    
-                                </div>
-                            {% endfor %}
-                       </form>
+                {% else %}
+                    <div class="blog-comment">
+                        <div class="author">
+                            <div class="name">
+                                <p>
+                                    <span>{{  moment(comment.date).fromNow() }}</span>
+                                    <span>{{ comment.name }},</span>
+                                </p>
+                            </div>                    
+                            <div class="date">
+                                <p>said:</p>
+                            </div>                   
+                        </div>
+                        <div class="authored">
+                            <div class="reply" style="text-decoration: line-through;">
+                                {{ comment.comment }}
+                            </div>
+                        </div>  
+                        <small style="color: brown;"><i class="fa fa-warning"></i> This comment is disabled by moderators. <i class="fa fa-warning"></i></small>
                     </div>
-                </div>             
-            </div>
+                {% endif %}
             {% endfor %}
             <div class="pagination">
                 {% if prev %}
@@ -155,6 +223,16 @@
         function goBack(){
             window.history.back()
         }
+
+        const sign = document.getElementById('sign');
+
+        sign.addEventListener('click', function(){
+            var url = sign.dataset.url;
+            
+            setTimeout(function(){
+                window.location.href = url;
+            }, 500);
+        });
     </script>
 {% endblock js %}
 {% endblock %}

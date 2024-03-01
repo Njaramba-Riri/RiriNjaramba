@@ -12,25 +12,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
 </head>
-<body>
+<body class="which-theme">
 {% block body %}
     <div class="messages" id="messages">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                 <div class="alert alert-{{ category }} alert-dismissible" fade show role="alert">
-                    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+                    <button type="button" class="exit" data-bs-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    {{ message }}
+                    <div class="info">
+                        <span><i class="fa fa-info-circle"></i> {{ message }}.</span>
+                    </div>
                 </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}        
     </div>
     {% block content %}
-        {{ content }}
+        {{ content }}       
     {% endblock %}
+    <div class="theme" id="toggle-theme" title="Change theme">
+        <!-- <ion-icon name="color-palette-outline"></ion-icon> -->
+        <i class="fa fa-palette"></i>
+    </div> 
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='js/main.js')}}"></script>
@@ -48,6 +54,30 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+    <script>
+        var isDarkTheme = localStorage.getItem('theme') === 'dark';
+        updateTheme(isDarkTheme);
+
+        function toggleTheme(){
+            isDarkTheme = !isDarkTheme;
+            updateTheme(isDarkTheme);
+
+            localStorage.setItem('theme', isDarkTheme ? 'dark': 'light');
+        }
+
+        function updateTheme(isDark){
+            document.body.classList.toggle('dark-theme', isDark);
+        }
+
+        document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
+
+        window.addEventListener('storage', function(event){
+            if (event.key === 'theme'){
+                isDarkTheme = event.newValue === 'dark';
+                updateTheme(isDarkTheme);
+            }
+        });
+    </script>
     {% block js %}{% endblock %}
 {% endblock %}
 </body>
