@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Bytes by Tag | {{ tag  }} {% endblock %}
+
+{% block content %}
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
+<div class="blogs">
+    <div class="items" id="tags">
+        <div class="main">
+            <div class="blog-search">
+                <h2>Hub :)</h2>
+                <div class="text">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <input type="text" id="search-blog" placeholder="Search Posts.">
+                </div>
+                <div class="add">
+                    <span onclick="window.history.back()" style="cursor: pointer;">Back</span>
+                </div>
+            </div>
+            <div class="posts">
+                <div class="bloggs">
+                    {% if not posts %}
+                        <div id="emp">
+                            <p>You caught us. Seems there's no bytes with <code>{{ tag }}</code> tag, check out later.</p>
+                        </div>
+                    {% else %}
+                        {% for blog in posts %}
+                        <div class="blog">
+                            <div class="posted">
+                                <p><i class="fa fa-clock"></i> {{ moment(blog.date_created).fromNow() }}</p>
+                                {% if current_user.is_authenticated %}
+                                    <i class="fa fa-bookmark" title="Save to read later"></i>
+                                {% endif %}
+                                <i class="fa fa-share" title="Share"></i>
+                                <div class="shareables">
+                                    <div class="share-body">
+                                        <p>Sharing is caring!</p>
+                                        <ul>
+                                            <li>
+                                                <a href="https://facebook.com/sharer.php?u={{ url_for('.blog', title=blog.title) }}" target="_blank">
+                                                    <i class="fa fa-brands fa-facebook" title="Share on Facebook"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://twitter.com/intent/tweet/?text=Have a look at this blog!, I think it's a greate read&url={{ url_for('.blog', title=blog.title) }}" target="_blank">
+                                                    <i class="fa-brands fa-twitter" title="Share on twitter"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="mailto:?subject={{ blog.title | safe }}&body={{ blog.post | safe }}" target="_blank">
+                                                    <i class="fa fa-envelope" title="Share via email"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://linkedin.com/sharing/share-offsite/?url={{ url_for('.blog', title=blog.title) }}" target="_blank">
+                                                    <i class="fa-brands fa-linkedin" title="Share on Linkedin"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="htpps://reddit.com/submit/?url={{ url_for('.blog', title=blog.title) }}&title={{ blog.title | safe }}" target="_blank">
+                                                    <i class="fa-brands fa-reddit" title="Share on Reddit"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://api.whatsapp.com/send?text=Hello, have a look at this blog. I think it's a great read.{{ url_for('.blog', title=blog.title) }}" target="_blank">
+                                                    <i class="fa-brands fa-whatsapp" title="Share on Whatsapp"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://news.ycombinator.com/submitlink?u={{ url_for('.blog', title=blog.title) }}&t=Have a look at this blog. I think it's a great read." target="_blank">
+                                                    <i class="fa-brands fa-hacker-news" title="Share on HackerNews"></i>
+                                                </a>
+                                            </li>
+                                        </ul>                                        
+                                    </div>
+                                </div>
+                                <div class="opts" title="Options">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="options">
+                                    <ul>
+                                        <li class="edit" data-url="{{ url_for('.edit_blog', title=blog.title) }}">
+                                            <i class="fa fa-pen-fancy"></i>
+                                            Edit
+                                        </li>
+                                        <li class="ficha" data-url="{{ url_for('.hide', blog_id=blog.post_id ) }}">
+                                            <i class="fa fa-eye-slash"></i>
+                                            Hide
+                                        </li>                                        
+                                        <li class="del" data-url="{{ url_for('.delete', blog_id=blog.post_id) }}" >
+                                            <i class="fa fa-trash-arrow-up"></i>
+                                            Delete
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="header">
+                                {% if blog.title_html %}
+                                   <h3>{{ blog.title | safe }}</h3>
+                                {% else %}
+                                    <h3>{{ blog.title | safe }}</h3>
+                                {% endif %}
+                            </div>
+                            <div class="blog-content">                               
+                                {% if blog.post_html %}
+                                    {{ blog.post_html | safe | truncate(500, true) }}
+                                {% else%} 
+                                    {{blog.post | truncate(500, true)}} 
+                                {% endif %}                                
+                                <div class="more">
+                                    <a href="{{ url_for('.blog', title=blog.title) }}" class="read">Read More. 
+                                        <ion-icon name="arrow-forward-outline"></ion-icon>
+                                    </a>
+                                    {% if blog.comments.count() %}
+                                        <a href="{{ url_for('.blog', title=blog.title) }}#comments">
+                                            <span class="label label-primary">
+                                            {{ blog.comments.count() }} Comments  
+                                            </span>
+                                            <i class="fa fa-message"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('.blog', title=blog.title) }}#comments">
+                                            <span class="label label-primary">
+                                                <small title="Be the first to leave a comment">No comment</small>
+                                            </span>
+                                            <i class="fa fa-message"></i>
+                                        </a>
+                                    {% endif %}                                        
+                                </div>
+                            </div>
+                            <div class="blog-footer">
+                                <div class="tags">
+                                    {% for tag in tags %}
+                                        <p class="tag" data-url="{{ url_for('.blog_by_tag', tag_name=blog.tags.tag_id) }}" title="Click for more on {{ tag.name }}">
+                                            {{ tag.name }}
+                                        </p>
+                                    {% endfor %}
+                                </div>                                
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>            
+        </div>
+        <div class="side">
+            <div class="recent">
+                <h2>Recent Bytes.</h2>
+                {% for post in recent %}
+                    <div class="rece">
+                        <span class="index">#{{ loop.index }}</span>
+                        {% if post.title_html %}
+                            <a href="{{ url_for('blogs.blog', title=post.title) }}">
+                                {{ post.title | safe }}
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('blogs.blog', title=post.title_html) | safe }}">
+                                {{ post.title | safe }}
+                            </a>
+                        {% endif %}                        
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="top-tag">
+                <h2>Top Tags</h2>
+                <div class="tops">
+                    {% for tag in tags %}
+                        <p>
+                            <span  class="tag" data-url="{{ url_for('.blog_by_tag', tag_name=tag.name) }}" title="Click for more on {{ tag.name }}">
+                                #{{ tag.name }}
+                            </span>
+                        </p>
+                    {% endfor %}                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="action-modal" id="hide-blog">
+        <div class="action-content">
+            <div class="head">
+                <i class="fa fa-check-circle"></i>
+                <p>Confirm your action</p>
+            </div>
+            <div class="action-body">
+                <p>
+                    By confirming this action, your blog post will be hidden from the general 
+                    public, only you who can see it. Proceed?.
+                </p>
+            </div>
+            <div class="action-foot">
+                <button type="button" id="close">No</button>
+                <button class="delete" type="button">Yes</button>
+            </div>            
+        </div>
+    </div>     
+    <div class="action-modal" id="del-blog">
+        <div class="action-content">
+            <div class="head">
+                <i class="fa fa-warning"></i>
+                <p>Confirm your action</p>
+            </div>
+            <div class="action-body">
+                <p>By confirming this action, your blog post will be deleted 
+                    and there will be no way to recover it. Proceed?.
+                </p>
+            </div>
+            <div class="action-foot">
+                <button type="button" id="close">No</button>
+                <button type="button" class="delete">Yes</button>
+            </div>                                                    
+        </div>
+    </div> 
+    {% include 'include/footer.html' %}
+</div>
+{% endblock %}
+{% block js %}
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+    {{ moment.include_moment() }}
+    <script src="{{ url_for('static', filename='js/blogs.js')}}"></script>
+{% endblock %}

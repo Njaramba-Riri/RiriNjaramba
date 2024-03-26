@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% import 'macros/pagination.html' as paginate %}
+
+{% block title %}
+    Comment Moderation - Moderator 
+        {% if current_user.display_name %}
+            {{ (current_user.display_name).split()[0] }}
+        {% else %}
+            {{ current_user.username }} 
+        {% endif %}
+{% endblock %}
+
+{% block content %}
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
+<div class="comnts">
+    <div class="tables" id="page-content">
+        <div class="heading">
+            <h2>Blog Comments <ion-icon name="chatbubbles-outline"></ion-icon></h2>
+            <label>
+                <input type="text" name="" id="search" placeholder="Search comments">
+                <ion-icon name="search-outline"></ion-icon>
+            </label>
+        </div> 
+        <div class="table-main">
+            <table id="comments">
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>User</th>
+                        <th>Comment</th>
+                        <th>Status</th>
+                        <th>Timestamp</th>
+                        <th>Action</th>
+                    </tr>                
+                </thead>
+                <tbody>
+                    {% for comment in comments %}
+                    <tr class="toBlog" data-url="{{ url_for('blogs.blog', title=comment.blog.title) }}#{{ comment.id }} " 
+                    title="Click to go to blog."> 
+                        {% if not comment.email %}
+                            <td class="data"><img src="{{ user.gravatar(256) }}" alt=""></td>
+                        {% else %}
+                            <td class="data"><img src="{{ url_for('static', filename='images/user.png') }}" alt=""></td>
+                        {% endif %}
+                        <td class="data">
+                            {% if comment.author.username %}
+                                <a href="{{ url_for('users.user', username=comment.author.username)}}" title="{{ comment.author.email }}">
+                                    {% if comment.author.display_name %}
+                                        {{ comment.author.display_name | title }}
+                                    {% else %}
+                                        {{ comment.author.username }}
+                                    {% endif %}                                    
+                                </a>
+                            {% else %}
+                                <a href="" title="{{ comment.email }}">
+                                    <span style="display: flex; flex-direction: column;">
+                                        {{ comment.name }}
+                                        <small style="font-size: .7em; color: brown; padding-left: .5rem;">
+                                            <i class="fa fa-info-circle"></i> Not registered
+                                        </small>                                        
+                                    </span>                                    
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td>{{ comment.comment | truncate(100, true, '.....') }}</td>
+                        {% if comment.disabled %}
+                            <td class="data positive" title="Disabled"><i class="fa fa-warning"></i></td>
+                        {% elif comment.disabled == 0 %}
+                            <td class="data negative" title="Enabled"><i class="fa fa-check-circle"></i></td>
+                        {% else %}
+                            <td class="data negp" title="Not reviewed"><i class="fa fa-exclamation-circle"></i></td>
+                        {% endif %}
+                        <td class="data">{{ moment(comment.date).fromNow() }}</td>  
+                        <td>
+                            <div class="icons">
+                                {% if comment.disabled %}
+                                <i class=" fa fa-check-square enable" title="Enable" class="edit" 
+                                data-url="{{ url_for('.moderate_enable', id=comment.id, page=page) }}"></i>
+                                {% elif comment.disabled == False %}
+                                <i class="fa fa-thumbs-down disable" title="Disable" 
+                                data-url="{{ url_for('.moderate_disable', id=comment.id, page=page) }}" ></i> 
+                                {% else %}
+                                <i class=" fa fa-check-square enable" title="Enable" class="edit" 
+                                data-url="{{ url_for('.moderate_enable', id=comment.id, page=page) }}"></i>
+                                <i class="fa fa-thumbs-down disable" title="Disable" 
+                                data-url="{{ url_for('.moderate_disable', id=comment.id, page=page) }}" ></i> 
+                                {% endif %}
+                                <i class="fa fa-trash delete" title="Delete" 
+                                data-url="{{ url_for('.moderate_delete', id=comment.id, page=page) }}"></i>
+                            </div>
+                        </td>                
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagin">
+                {% if pagination %}
+                    {{ paginate.pagination_widget(pagination,'.comments')}}
+                {% endif %}
+            </div>                        
+        </div>
+    </div>   
+    <div class="footer">
+        <p>&copy;2024. <span>RiriNjaramba</span>&trade;. All rights reserved.</p>
+        <p>Made with <i class="fa fa-fire"></i> and <i class="fa fa-heart"></i> by Riri.</p>
+    </div>  
+</div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+    <script>
+        var clickables = [".enable", ".disable", ".delete"]
+        var blogs = document.querySelectorAll(".toBlog");
+
+        clickables.forEach((click)=>{
+            var cElements = document.querySelectorAll(click);
+            cElements.forEach(function(clickee){
+                clickee.addEventListener('click', function(){
+                    window.location.href = this.getAttribute('data-url');
+                });
+            });
+        });
+        
+        blogs.forEach(function(clickMe){
+            clickMe.addEventListener('click', function(){
+                url = clickMe.getAttribute("data-url");
+                window.location.href = url;                
+            });
+        });
+    </script>
+{% endblock %}
