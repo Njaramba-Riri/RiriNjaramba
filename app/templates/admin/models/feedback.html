@@ -1,0 +1,43 @@
+{% import 'admin/include/pagination.html' as paginate %}
+
+<div class="tables">
+    <div class="heading">
+        <h2>Client Feedback <ion-icon name="chatbubbles-outline"></ion-icon></h2>
+        <label>
+            <input type="text" name="" id="search" placeholder="Search comments">
+            <ion-icon name="search-outline"></ion-icon>
+        </label>
+    </div> 
+    <div class="table-main">
+        <table id="comments">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>email</th>
+                    <th>Feedback</th>
+                    <th>Date</th>
+                </tr>                
+            </thead>
+            <tbody>
+                {% for feed in feedback %}
+                <tr class="toBlog"> 
+                    <td class="data" title="{{ feed.name }}" style="display: flex; flex-direction: column; align-items: center;">
+                        <img src="{{ url_for('static', filename='images/user.png') }}" alt="">
+                        {{ (feed.name).split()[0] }}
+                    </td>
+                    <td class="data">
+                        <a href="mailto:{{ feed.email }}">{{ feed.email }}</a>
+                    </td>
+                    <td class="data">{{ feed.feed | truncate(100, true) | safe }}</td>
+                    <td class="data">{{ feed.created_at.strftime('%Y-%m-%d') }}</td>                
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagin">
+            {% if pagin %}
+                {{ paginate.pagination_widget(pagin,'.feed')}}
+            {% endif %}
+        </div>                        
+    </div>
+</div> 

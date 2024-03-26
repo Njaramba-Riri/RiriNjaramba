@@ -1,0 +1,57 @@
+<div class="profile">
+    <div class="details">
+        <div class="avatar">
+            {% if not user.gravatar %}
+                <img src="{{ user.gravatar(256) }}" alt="Avatar">
+            {% else %}
+                <i class="fa fa-user-secret" style="font-size: 4rem;"></i>
+            {% endif %}        
+        </div>
+        <div class="gov">
+            <span><i class="fa fa-key"></i>{{ user.username }}</span>
+            <span><i class="fa fa-user-circle"></i>{{ user.display_name }}</span>
+            <span><i class="fa fa-user-tag"></i>{{ user.role.name }}</span>
+            <span><i class="fa fa-envelope"></i>{{ user.email }}</span>
+        </div>
+        <div class="edi">
+            <p id="edit">Edit<i class="fa fa-pen-square"></i></p>
+        </div>        
+    </div>
+    <div class="editable">
+        <form action="{{ url_for('.profile', username=user.username)}}" method="post">
+            {{ form.hidden_tag() }}
+            {% for field in form %}
+                {% if field.widget.input_type != 'hidden' %} 
+                    <div class="input">
+                        {% if field.type in ('StringField', 'SelectField') %}
+                            {{ field.label }}
+                            {{ field(class_='input-area') }}
+                        {% elif field.type == 'TextAreaField' %}
+                            {{ field.label }}
+                            {{ field(class_='text-area')}}
+                        {% elif field.type == 'SubmitField' %}
+                            <div class="summit" style="position: absolute; right: 0; bottom: 0;">
+                            {{ field(class_='submit') }}                                
+                            </div>
+                        {% else %}
+                            {{ field.label }}{{ field(title='Account status') }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+</div>
+<script>
+    var elements = ['.editable .input-area', '.text-area'];
+    var inputs = document.querySelectorAll('.editable .input-area');
+    inputs.forEach(input =>{
+        input.addEventListener('click', ()=>{
+            input.classList.add('active');
+        });
+    });
+
+    document.querySelector("form").addEventListener('click', (event)=>{
+        event.preventDefault();
+    });
+</script>

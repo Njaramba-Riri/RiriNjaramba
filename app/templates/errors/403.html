@@ -6,7 +6,7 @@
 {% include 'include/nav.html' %}
 {% include 'include/sidebar.html' %}
 <div class="error">
-    <div class="text">
+    <div class="text" id="text">
         <h3>Forbidden Access.</h3>
         <h4>You, explorer you!.</h4>
         <p> 
@@ -16,6 +16,8 @@
         <button onclick="goBack()" id="back">Go Back</button>
     </div>
 </div>
+
+{% endblock %}
 {% block js %}
     {{ super() }}
     <script>
@@ -24,4 +26,3 @@
         }
     </script>
 {% endblock js %}
-{% endblock %}

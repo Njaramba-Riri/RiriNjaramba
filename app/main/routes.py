@@ -1,6 +1,6 @@
 import random
 
-from flask import Blueprint, render_template, redirect, request, flash, abort, url_for
+from flask import Blueprint, render_template, redirect, request, flash, abort, url_for, session
 from flask_login import login_required
 
 from app import db
@@ -32,7 +32,8 @@ def index():
 
 @main_blueprint.route('/get-quote/', methods=['GET', 'POST'])
 def quote():
-    form = quoteForm()
+    service = session.get('title', '')
+    form = quoteForm(services=service)
     
     if form.validate_on_submit():
         name = form.name.data
@@ -49,7 +50,8 @@ def quote():
         except Exception as e:
             db.session.rollback()
             flash("Quote not sent, kindly try again.", category="warning")
-    return render_template('/mainapp/quote.html', form=form, permission=Permission)
+    return render_template('/mainapp/quote.html', form=form,
+                           title=session.get('title'), permission=Permission)
 
 @main_blueprint.route('/projects', methods=['GET', 'POST'])
 def projects():
@@ -71,3 +73,4 @@ def user(username):
     if not user:
         abort(404)
     return render_template("/users/user.html", user=user)
+

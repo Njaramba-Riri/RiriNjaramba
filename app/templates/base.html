@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='font/css/all.css') }}"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    
 </head>
 <body class="which-theme">
 {% block body %}
@@ -31,18 +32,19 @@
         {% endwith %}        
     </div>
     {% block content %}
-        {{ content }}       
+        {{ content }} 
+              
     {% endblock %}
-    <div class="theme" id="toggle-theme" title="Change theme">
-        <!-- <ion-icon name="color-palette-outline"></ion-icon> -->
+    <!-- <div class="theme" id="toggle-theme" title="Change theme">
         <i class="fa fa-palette"></i>
-    </div> 
+    </div>  -->
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='js/main.js')}}"></script>
     <script src="{{ url_for('static', filename='js/vanilla-tilt.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='font/js/all.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js')}}"></script>
+    <!-- <script src="{{ url_for('static', filename='font/js/all.min.js')}}"></script> -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" 

@@ -7,14 +7,8 @@ from flask import current_app, request, has_request_context
 from flask_login import AnonymousUserMixin, UserMixin
 
 from app import db
+from config import Permission
 from . import bcrypt
-
-
-class Permission:
-    COMMENT = 0x02
-    WRITE_ARTICLE = 0x04
-    MODERATE_COMMENTS = 0X08
-    ADMINISTER = 0x80
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -62,13 +56,17 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
+    display_name = db.Column(db.String(100))
+    bio = db.Column(db.String(500))
     about = db.Column(db.Text())
+    interests = db.Column(db.String(500))
+    location = db.Column(db.String(100))
     password = db.Column(db.String(255), nullable=False)
     confirmed = db.Column(db.Boolean(), default=False)
     avatar_hash = db.Column(db.String(64))
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id'))
-    created = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
-    last_seen = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
+    created = db.Column(db.DateTime(), default=datetime.datetime.now)
+    last_seen = db.Column(db.DateTime(), default=datetime.datetime.now)
     posts = db.relationship('Posts', backref='author', lazy='dynamic')
     comments = db.relationship('Comments', backref='author', lazy='dynamic')
     
@@ -80,7 +78,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(name="Administrator").first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
-
+        
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(
                 self.email.encode('utf-8')
@@ -205,12 +203,9 @@ class User(UserMixin, db.Model):
             return True
         else:
             return False
-
-    @property    
-    def is_active(self):
-        return True
     
     def get_id(self):
+        UnicodeDecodeError
         return str(self.id)
     
     def can(self, permissions):

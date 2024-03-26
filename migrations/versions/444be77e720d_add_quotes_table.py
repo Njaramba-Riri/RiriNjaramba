@@ -1,8 +1,8 @@
-"""Add quotes model
+"""Add quotes table
 
-Revision ID: a9c35940ad63
-Revises: 25c1bbcfeab6
-Create Date: 2024-02-27 14:50:06.157349
+Revision ID: 444be77e720d
+Revises: a491220dee3b
+Create Date: 2024-03-25 07:33:43.164206
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a9c35940ad63'
-down_revision = '25c1bbcfeab6'
+revision = '444be77e720d'
+down_revision = 'a491220dee3b'
 branch_labels = None
 depends_on = None
 

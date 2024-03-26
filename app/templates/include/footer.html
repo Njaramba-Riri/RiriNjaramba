@@ -1,0 +1,15 @@
+<div class="footer">
+    <p>&copy;<span id="year"></span>.<span id="tm">RiriNjaramba</span>&trade;. All rights reserved.</p>
+    <p>Made with <i class="fa fa-fire"></i> and <i class="fa fa-heart"></i> by Riri.</p>
+    
+    <script>
+        var year = document.getElementById("year");
+        
+        const getYear = () =>{
+            const date = new Date();
+
+            return date.getFullYear();
+        }
+        year.innerText = getYear();
+    </script>
+</div>  

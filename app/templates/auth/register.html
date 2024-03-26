@@ -5,8 +5,8 @@
 
 {% block content %}
 <div class="auth">
-    <div class="auth-form">
-        <form action="{{ url_for('.register') }}" method="post" id="auth">
+    <div class="auth-form" id="text">
+        <form action="{{ url_for('.register') }}" method="post">
             {{ macro.render(form) }}
             <div class="register">
                 <p>Already have an account? <a href="{{ url_for('.signin') }}">Log in</a></p>
@@ -21,6 +21,10 @@
           <path d="m302.012,157.925c-14.84,0-26.913-12.073-26.913-26.913 0-4.143-3.358-7.5-7.5-7.5s-7.5,3.357-7.5,7.5c0,23.111 18.802,41.913 41.913,41.913 4.142,0 7.5-3.357 7.5-7.5s-3.358-7.5-7.5-7.5z"/>
           <path d="m123.358,96.568c24.544,0 44.512-19.968 44.512-44.512s-19.968-44.512-44.512-44.512-44.512,19.968-44.512,44.512 19.968,44.512 44.512,44.512zm0-74.024c16.273,3.55271e-15 29.512,13.239 29.512,29.512s-13.239,29.512-29.512,29.512-29.512-13.239-29.512-29.512 13.239-29.512 29.512-29.512z"/>
         </g>
-      </svg>
+    </svg>
+    <div class="footer">
+        <p>&copy;2024. <span>RiriNjaramba</span>&trade;. All rights reserved.</p>
+        <p>Made with <i class="fa fa-fire"></i> and <i class="fa fa-heart"></i> by Riri.</p>
+    </div>
 </div>
 {% endblock %}

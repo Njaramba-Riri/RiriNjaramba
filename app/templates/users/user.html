@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ user.username }} Profile - Blog Author{% endblock %}
+{% block title %}{% if user.display_name %}{{ (user.display_name).split()[0] }}{% else %}{{ (user.username).split()[0] }}{% endif %} Profile - Accounts{% endblock %}
 
 {% block content %}
 {% include 'include/nav.html' %}
@@ -13,33 +13,211 @@
                     {% if user.is_administrator() %}
                         <img src="{{ url_for('static', filename='images/riri.jpg') }}" alt="">
                     {% else %}
-                        <img src="{{ url_for('static', filename='images/user.png') }}" alt="">
-                        <!-- <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}" alt=""> -->
+                        {% if user.gravatar %}
+                            <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=150) }}" alt="">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/user.png') }}" alt="">
+                        {% endif %}
                     {% endif %}
+                    <div class="format">
+                        {% if user.location %}
+                            <p class="loc" title="Current Location">
+                                <i class="fa fa-classic fa-map-marker"></i> 
+                                <a href="https://www.google.com/maps?q={{ user.location }}" 
+                                style="text-decoration: none; color: #002;" target="_blank">{{ user.location }}</a>
+                            </p>
+                        {% endif %}
+                        <p class="joined" title="Joined">
+                            <i class="fa fa-calendar"></i> Joined
+                            <span> {{ moment(user.created).format('LL') }}</span>.
+                        </p>
+                        {% if current_user.can(permission.ADMINISTER) %}
+                        <p class="joined" title="Last seen">
+                            <i class="fa fa-clock"></i> Last activity was 
+                            <span>{{ moment(user.last_seen).fromNow() }}</span>.
+                        </p>                
+                        {% endif %}                        
+                    </div>
                 {% endif %}                
             </div>
             <div class="details">
-                {% if user.is_administrator() %}
-                    <p>Riri Njaramba.</p>
-                {% else %}
-                    <p>{{ user.username | title }}</p>    
-                {% endif %}          
-                {% if user.about %}
-                    <p>{{ user.about | truncate(100, '---') }}</p>
+                <div class="interests">
+                    {% if user.is_administrator() %}
+                        <p class="user">
+                            <span class="name"><i class="fa fa-user-tag"></i>{{ user.display_name }}</span>
+                            <span class="ints" title="interests">
+                                <i class="fa fa-lightbulb"></i> 
+                                {{ user.interests }}
+                            </span>
+                        </p>
+                    {% else %}
+                        {% if user.display_name %}
+                            <p class="user">
+                                <span><i class="fa fa-user-tag"></i> {{ user.display_name | title }}</span>
+                                {% if user.interests %}
+                                    <span class="ints" title="interests">
+                                        <i class="fa fa-lightbulb"></i> 
+                                            {{ user.interests }}
+                                    </span>
+                                {% endif %}                                 
+                            </p> 
+                        {% else %}
+                            <p class="user">
+                                <span><i class="fa fa-user-tag"></i> {{ user.username | title }}</span>
+                                {% if user.interests %}
+                                    <span class="ints" title="interests">
+                                        <i class="fa fa-lightbulb"></i> 
+                                        {{ user.interests | safe }}
+                                    </span>
+                                {% endif %}
+                            </p>  
+                        {% endif %}
+                    {% endif %}                     
+                </div>
+                {% if user.bio %}
+                    <p class="about"><i class="fa fa-medal"></i> <span>{{ user.bio | safe }}</span></p>
                 {% endif %}
-                <p> Member since <span>{{ moment(user.created).format('LL') }}</span>.</p>
-                <p>Last activity was <span>{{ moment(user.last_seen).fromNow() }}</span>.</p>                
+                
+            </div>     
+            <div class="edi">
+                <p id="edi-brief">
+                    {% if current_user.id == user.id %}
+                        <span><i class="fa fa-pen"></i></span>
+                        Edit 
+                    {% endif %}
+                </p>
             </div>
         </div>
-        <hr>
-        <div class="more">
-            <p class="item" id="posts" title="Posts by {% if user.is_administrator() %} Riri Njaramba {% else%} {{ user.username | title }} {% endif %}">Posts <span># {{ posts | length }}</span></p>
-            <p class="item" id="comments" title="Comments by {% if user.is_administrator() %} Riri Njaramba {% else%} {{ user.username | title }} {% endif %}">Comments <span># {{ replies | length }}</span></p>
-            <p class="item" id="about" title="About {% if user.is_administrator() %} Riri Njaramba {% else%} {{ user.username | title }} {% endif %}">About</p>
+        <div class="bio-modal" id="bio-modal">
+            <div class="modal-content">
+                <div class="bio-header">
+                    {% if user.gravatar %}
+                        <img src="{{ user.gravatar(150) }}" alt="">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='/images/user.png') }}" alt="">
+                    {% endif %}
+                    Hey{% if user.display_name %}<strong>{{ (user.display_name).split()[0] }}</strong>{% else %} <strong>{{ user.username | title }}</strong>{% endif %} :)
+                    <div class="exit">
+                    <span id="hide">&times; </span>
+                    </div>
+                </div>
+                <div class="bio-body">
+                    <form action="{{ url_for('.user', username=user.username) }}" method="post">
+                        <div class="bio-content">
+                            {{ bio.hidden_tag() }}
+                            {% for field in bio %}
+                                {% if field.widget.input_type != 'hidden' %}
+                                {% if field.type == 'StringField' %}
+                                    <div class="bio-fields">
+                                        {{ field.label }}
+                                        {{ field(class_='bio-input') }}                            
+                                    </div>
+                                {% else %}
+                                    <div class="bio-fields">
+                                        {{ field.label }}
+                                        {{ field(class_='bio-text') }}                            
+                                    </div>                            
+                                {% endif %}
+                                {% endif %}
+                            {% endfor %}                           
+                        </div>         
+                        <div class="bio-footer">
+                            <button type="button" class="bio-btn" id="close">Close</button>
+                            <button type="submit" class="bio-btn" id="save">Save</button>
+                        </div>                
+                    </form>
+                </div>                
+            </div>
         </div>
+        <div class="more">
+            <p class="item" id="about" title="About {% if user.display_name %} {{ (user.display_name).split()[0] | title }} {% else%} {{ (user.username).split()[0] | title }} {% endif %}">About</p>
+            <p class="item" id="posts" title="Posts by {% if user.display_name %} {{ (user.display_name).split()[0] | title }} {% else%} {{ (user.username).split()[0] | title }} {% endif %}">Posts <span># {{ posts | length }}</span></p>
+            <p class="item" id="comments" title="Comments by {% if user.display_name %} {{ (user.display_name).split()[0] | title }} {% else%} {{ (user.username).split()[0] | title }} {% endif %}">Comments <span># {{ comments | length }}</span></p>
+        </div>
+        <div class="whome" id="whome">
+            <h2>
+                <span>
+                    About 
+                    {% if current_user.id == user.id %}
+                        you 
+                    {% elif user.is_administrator() %}
+                        Riri Njaramba
+                    {% else %}
+                        {% if user.display_name %} {{ (user.display_name).split()[0] | title }} {% else%} {{ (user.username).split()[0] | title }} {% endif %}
+                    {% endif %}
+                </span>
+                {% if current_user.is_authenticated and current_user.id == user.id %}
+                    {% if current_user.is_administrator() %}
+                        <p id="upload">Update CV</p>
+                        <p id="edit">Edit About [Admin]</p>
+                    {% else %}
+                        <p id="edit">Edit About</p>
+                        <p id="upload">Update CV</p>
+                    {% endif %}
+                {% endif %}
+            </h2>
+            <p>
+                {% if not user.about %}
+                {% if user.display_name %} {{ (user.display_name).split()[0] | title }} {% else%} {{ (user.username).split()[0] | title }} {% endif %}
+                    has not uploaded information about professional summary, but you can check cv.
+                {% else %}
+                    {{ user.about | safe }}
+                {% endif %} 
+            </p>
+            <div class="form" id="about-update">
+                <form action="{{ url_for('.user', username=current_user.username ) }}" method="post">
+                    {{ about.hidden_tag() }}
+                    {% for field in about %}
+                        {% if field.widget.input_type != 'hidden' %}
+                        <div class="field">
+                            {{ field(class_='text-about', placeholder=field.label.text) }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="download">Update About</button>
+                </form>                
+            </div>
+            <div class="upload" style="text-align: center;" id="cv">
+                <form action="{{ url_for('.upload_file') }}" method="post" enctype="multipart/form-data" >
+                    {% for field in form %}
+                        {{ field }}
+                    {% endfor %}
+                    <button type="submit" class="download">Upload CV</button>
+                </form>                
+            </div>
+            <div id="file-preview-modal" class="modal">
+                <div class="content-modal">
+                  <span class="close" onclick="closeModal()">&times;</span>
+                   {% if user.is_administrator() %} 
+                        <iframe id="file-preview-iframe" class="preview-frame" src="" data-url="/static/uploads/Resume`.pdf"></iframe>
+                   {% else %}
+                        {{ user.username }} haven't yet uploaded cv.
+                        <iframe id="file-preview-iframe" class="preview-frame"  src="" data-url=""></iframe>
+                  {% endif %}
+                </div>
+            </div>
+            <button onclick="showPreview()" class="download">Preview CV</button>
+            <button class="download" id="download" data-url="{{ url_for('.upload_file') }}">
+                Download CV.
+            </button>
+        </div>          
         <div class="posts" id="blogs">
             <h2>
-                Posts by {% if user.is_administrator() %} Riri Njaramba. {% else%} {{ user.username }} {% endif %}
+                Published by 
+                {% if current_user.id == user.id %}
+                    you                
+                {% elif user.is_administrator() %} 
+                    Riri Njaramba
+                {% else%} 
+                    {% if user.display_name %}
+                        {{ (user.display_name).split()[0] | title }} 
+                    {% else %} 
+                        {{ user.username | title}}
+                    {% endif %} 
+                {% endif %}
+                {% if current_user == user %}
+                    <a href="{{ url_for('blogs.new_blog') }}">Add New</a>
+                {% endif %}
             </h2>
             {% if not posts %}
             <div class="replies">
@@ -73,76 +251,67 @@
             {% endif %}
         </div>   
         <div class="replies" id="replies">
-            <h2>Comments by {% if user.is_administrator() %} Riri Njaramba {% else%} {{ user.username | title }}{% endif %}</h2>
+            <h2>Comments by 
+                {% if current_user.id == user.id %}
+                    you
+                {% elif user.is_administrator() %} 
+                    Riri Njaramba 
+                {% else%} 
+                    {% if  user.display_name %}{{ (user.display_name).split()[0] }}{% else %}{{ user.username | title }}{% endif %}
+                {% endif %}</h2>
             {% if not comments %}
                 <p class="no-comm">
-                    <span>{% if user.is_administrator() %} Riri Njaramba {% else%} {{ user.username | title }} {% endif %}</span>
-                    does not have any comments by far.
+                    <span>
+                        {% if current_user.id == user.id %}
+                            You
+                        {% elif user.is_administrator() %} 
+                            Riri
+                        {% else%}
+                            {% if user.display_name %}
+                                {{ (user.display_name).split()[0] | title }}
+                            {% else %}
+                                {{ user.username | title }} 
+                            {% endif %}
+                        {% endif %}
+                    </span>
+                    currently haven't made any comments by far.
                 </p> 
             {% else %}
                 {% for comment in comments %}
-                    <p class="comm">
-                        {{ comment.comment }}
-                    </p>
+                    <div class="comms">
+                        <p>
+                            {{ moment(comment.date).fromNow() }},
+                            {% if current_user.id == user.id %}
+                                you
+                            {% elif user.is_administrator() %}
+                                <span>Riri</span>
+                            {% else %}
+                                {% if user.display_name %}
+                                    <span>{{ (user.display_name).split()[0] | title }}</span>
+                                {% else %}
+                                    <span>{{ user.username | title }} </span>
+                                {% endif %}
+                            {% endif %}
+                            commented:                            
+                        </p>
+                        <p class="comm">
+                            &OpenCurlyDoubleQuote;{{ comment.comment }}&CloseCurlyDoubleQuote;
+                        </p>
+                        <p>Commenting to 
+                            {% for post in posts %}
+                                {% if comment.blog_id != post.id %}
+                                    {% if post.title %}
+                                        <a href="{{ url_for('blogs.blog', title=post.title )  }}#{{ comment.id }}">{{ post.title | safe | truncate(20)}}</a>
+                                    {% elif post.title_html %}
+                                        <a href="{{ url_for('blogs.blog', title=post.title_html | safe ) }}#{{ comment.id }}">{{ post.title_html | safe | truncate(10)}}</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </p>                        
+                    </div>
                 {% endfor %}
             {% endif %}
         </div>
-        <div class="whome" id="whome">
-            <h2>
-                <span>About {% if user.is_administrator() %}Riri Njaramba {% else %} {{ user.username | title }} {% endif %}</span>
-                {% if current_user.is_authenticated and current_user.id == user.id %}
-                    {% if current_user.is_administrator() %}
-                        <p id="upload">Update CV</p>
-                        <p id="edit">Edit About [Admin]</p>
-                    {% else %}
-                        <p id="user-edit">Edit About</p>
-                    {% endif %}
-                {% endif %}
-            </h2>
-            <p>
-                {% if not  user.about %}
-                    {{ user.username }} have not uploaded information about professional summary, but you can check cv.
-                {% else %}
-                    {{ user.about }}
-                {% endif %} 
-            </p>
-            <div class="form" id="about-update">
-                <form action="{{ url_for('.user', username=current_user.username ) }}" method="post">
-                    {{ about.hidden_tag() }}
-                    {% for field in about %}
-                        {% if field.widget.input_type != 'hidden' %}
-                        <div class="field">
-                            {{ field(class_='text-about', placeholder=field.label.text) }}
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                    <button type="submit" class="download">Update About</button>
-                </form>                
-            </div>
-            <div class="upload" style="text-align: center;" id="cv">
-                <form action="{{ url_for('.upload_file') }}" method="post" enctype="multipart/form-data" >
-                    {% for field in form %}
-                        {{ field }}
-                    {% endfor %}
-                    <button type="submit" class="download">Upload CV</button>
-                </form>                
-            </div>
-            <div id="file-preview-modal" class="modal">
-                <div class="modal-content">
-                  <span class="close" onclick="closeModal()">&times;</span>
-                   {% if user.is_administrator() %} 
-                        <iframe id="file-preview-iframe" class="preview-frame" src="" data-url="/static/uploads/Resume`.pdf"></iframe>
-                   {% else %}
-                        <iframe id="file-preview-iframe" class="preview-frame"  src="" data-url=" "></iframe>
-                        {{ user.username }} have not uploaded cv yet.
-                  {% endif %}
-                </div>
-            </div>
-            <button onclick="showPreview()" class="download">Preview CV</button>
-            <button class="download" id="download" data-url="{{ url_for('.upload_file') }}">
-                Download CV.
-            </button>
-        </div>     
     </div>
 </div>
 {% endblock %}
@@ -159,6 +328,25 @@
         const upload = document.getElementById("upload");
         const update = document.getElementById('edit');
         const about = document.getElementById('about-update');
+        const edit = document.getElementById("edi-brief");
+        const close_ids = ['hide', 'close']
+
+        edit.addEventListener('click', function(event){
+            var modal = document.getElementById('bio-modal');
+            // modal.classList.toggle('visible');
+
+            setTimeout(function(){
+                modal.classList.toggle('visible');
+            }, 100)
+        });
+
+        close_ids.forEach(function(id){
+            var item = document.getElementById(id);
+            item.addEventListener('click', (event)=>{
+                var modal = document.getElementById('bio-modal');
+                modal.classList.toggle('visible');
+            });
+        });
 
         userElements.forEach((element, index) => {
             const clickableElement = document.getElementById(element);

@@ -6,10 +6,10 @@
                 <div class="blog-field">
                     {% if field.name == 'title' %}
                         {{ field.label(class_='label') }}
-                        {{ field(class_='blog-title', placeholder='Here goes your blog title.') }}
-                    {% else %}
+                        {{ field(class_='blog-title', id='title', placeholder='Here goes your blog title.') }}
+                    {% elif field.name == 'body' %}
                         {{ field.label(class_='label') }}
-                        {{ field(class_='blog-input', placeholder="...and here goes your tea.") }}
+                        {{ field(class_='blog-input', id="editor", placeholder="...and here goes your tea.") }}
                     {% endif %}
                 </div>
            {% endif %} 

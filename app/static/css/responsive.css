@@ -1,13 +1,48 @@
 @media(max-width: 600px){
+    .tab .toggle{
+        left: 35%;
+    }
+    .tags{
+        margin: 0.5rem 0;
+    }
+    .sidebar ul{
+        padding: 0 1rem;
+    }
+    .sidebar li{
+        margin: 0.5rem 0;
+    }
+    .navigation{
+        padding: 0;
+    }
+    .toggle p{
+        margin-left: 10px;
+    }
+    nav ul li{
+        padding: 0;
+        margin: 0;
+    }
+    nav ul #service{
+        display: none;
+    }
+    nav ul #quote{
+        padding: .5rem;
+    }
     .intro {
         display: block;
         min-height: 80vh;
+        overflow: hidden;
     }
     .intro .hello {
-        /* position: absolute;
-        padding: 10rem 3rem; */
+        position: absolute;
+        left: 0;
+        right: 0;
         text-align: center;
+        padding-top: 10rem;
         z-index: 30;
+    }
+    .hello .title{
+        top: 0;
+        left: 0;
     }
     .scroll{
         display: none;
@@ -18,14 +53,14 @@
         height: 80vh;
     }
     .me img{
-        position: absolute;
-        /* top: 5%; */
+        position: sticky;
+        top: 5%;
         left: 10%;
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        border-bottom-left-radius: 100%;
-        animation: play 3s ease-in-out alternate-reverse infinite;
+        width: auto;
+        height: 350px;
+        border-radius: 50% !important;
+        border-bottom-left-radius: 100% !important;
+        animation: play 60s ease-in-out infinite alternate;
     }
     @keyframes play {
         20%{
@@ -42,25 +77,81 @@
         }
         
     }
-
+    .me::before,
+    .me:hover::before{
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+    }
+    .Njaramba{
+        padding: .5rem 1rem;
+    }
+    .Njaramba .contact{
+        padding: 0;
+    }
+    .contact .form{
+        padding: 0.5rem;
+    }
+    form .input{
+        margin: 5px 0;
+    }
+    .input .input-area,
+    .input .text-area{
+        width: 100%;
+    }
+    .input .text-area{
+        border-top-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .contact .button{
+        margin: 1rem 0;
+    }
+    .Njaramba .socials{
+        padding: 1rem;
+    }
+    .email a{
+        padding-top: 0;
+    }
+    .mid p{
+        margin-bottom: 0;
+    }
     .blogs{
-        padding: 5rem 1rem;
         overflow-x: hidden;
     }
+    .posts .pagination{
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding-top: .5rem;
+    }
+    .posts .pagination ul{
+        margin-bottom: 0;
+    }
+    .items .side{
+        margin-bottom: 1rem;
+    }
+    .blogs .welcome{
+        min-height: 100%;
+        padding: 2rem 0;
+    }
     .blogs .items{
-        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        padding: 0 .2rem;
     }
     .blog-search{
         display: grid;
         grid-template-columns: repeat(2, 1fr);
     }
     .blog-search #search-blog:hover{
-        height: 3rem;
         border-radius: 2rem;
     }
-    .items .blogs{
+    .items .bloggs{
         padding: 0.5rem;
         grid-template-columns: 1fr;
+    }
+    .items .comments{
+        padding: 0.5rem;
     }
     .posts .blog{
         padding: .5rem;
@@ -72,26 +163,73 @@
         padding: 1rem;
     }
     .blogs-page .overview{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         align-items: start;
-        flex-direction: column;
+        /* flex-direction: column; */
         gap: 0;
         margin-bottom: 1rem;
     }
+    .blogs-page .blog-content{
+        background-color: rgba(231, 255, 238, .2);
+        padding: .5rem;
+    }
+    .blog-content .header{
+        background-color: rgba(231, 255, 238, .4);
+        padding: 0 .4rem;
+    }
     .overview button{
         margin-top: -5rem;
+        display: none;
     }
     .comment{
-        padding: 1rem;
+        padding: .5rem;
+    }
+    .comment .comment-form{
+        padding: .5rem;
+        margin-top: 1rem;
     }
     .comment-form form{
         grid-template-columns: 1fr;
+        grid-gap: 1rem;
+    }
+    form .field{
+        margin: 0;
     }
     .comment-form .input-area{
         width: 100%;
         border: 1px solid var(--ibiza);
     }
+    .comments .blog-comment{
+        margin: .8rem 0;
+    }
+    .comments .go-comment{
+        padding: .5rem;
+    }
+    .reply-comment form{
+        padding: 0;
+    }
+    .reply-comment .input-reply,
+    .reply-comment .text-area{
+        width: 100%;
+        margin: 0.5rem 0;
+    }
     form .submit{
         margin: 0;
+    }
+    .edit-new{
+        padding: 5rem 1rem;
+    }
+    .edit-new .add-new{
+        grid-template-columns: 1fr;
+        grid-auto-flow: dense;
+        grid-gap: 1rem;
+    }
+    .add-new .blog-form{
+        padding: 0;
+    }
+    .blog-form .top{
+        flex-direction: row-reverse;
     }
     .quote{
         padding: 5rem 1rem;
@@ -124,17 +262,97 @@
         padding: 5rem 1rem;
     }
     .auth .auth-form{
-        position: relative;
-        transform: none;
-        width: 100%;
-        top: 0;
-        left: 0;
-        margin-top: 5rem;
+        min-width: 350px;
+    }
+    .auth #forgot{
+        padding-top: 5rem;
     }
     .auth form{
         padding: 1rem;
     }
     .auth .unconfirmed{
         padding: 2rem;
+    }
+    .work{
+        padding: 3rem 1rem;
+        padding-bottom: 1rem;
+    }
+    .work .projects{
+        padding: 1rem;
+    }
+    .projects .jello{
+        padding: 0;
+        margin: 0.5rem 0;
+    }
+    .projects .gallery{
+        grid-template-columns: 1fr;
+        grid-gap: 1rem;
+    }
+    .work .user-feed{
+        padding: 0.5rem;
+        margin: 1rem 0;
+    }
+    .user-feed h3{
+        margin: 0;
+    }
+    .user-feed .feed-cards{
+        padding: 1rem;
+        grid-template-columns: 1fr;
+        grid-gap: 0.5rem;
+    }
+    .ready{
+        padding: 0;
+        margin: 1rem 0;
+    }
+    .ready h3{
+        padding-top: 0.5rem;
+    }
+    .ready p{
+        margin-bottom: 0;
+    }
+    .footer{
+        justify-content: center;
+        flex-direction: column-reverse;
+        /* margin: 0 -1rem; */
+        margin: 0 !important;
+        padding: 0 !important;
+        border-top: 1px solid gray;
+    }
+    .footer p{
+        margin-bottom: 0;
+    }
+    .users{
+        padding-top: 5rem;
+    }
+    .users .profile{
+        display: grid;
+        padding: .5rem;
+    }
+    .profile .picture{
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .picture .format{
+        padding: 1rem 0;
+    }
+    .format p{
+        margin: 0;
+    }
+    .profile .details{
+        padding: 0;
+        width: 100%;
+        margin-top: -2rem;
+    }
+    .bio-modal.visible{
+        padding: 1rem;
+    }
+    .modal-content{
+        width: 100%;
+    }
+    .bio-footer, 
+    .bio-header{
+        backdrop-filter: none;
+        background: linear-gradient(45deg, lightblue, var(--abyss));
     }
 }

@@ -1,0 +1,87 @@
+<div class="savigation">
+	<div id="tops">
+		<img src="{{ url_for('static', filename='/images/riri.jpg')}}" alt="">
+		<span class="item" data-url="{{ url_for('mainapp.index') }}" style="cursor: pointer;" id="home">
+			Riri<span style="color: wheat;">Njaramba</span>
+		</span>		
+	</div>	
+	<ul>
+		<li class="item" data-url="{{ url_for('.boards') }}" id="dashboard">
+			<span class="icon"><ion-icon name="speedometer-outline"></ion-icon></span>
+			Dashboard			
+		</li>
+		<li data-url="{{ url_for('blogs.blog_index') }}" id="bytes">
+			<span class="icon"><ion-icon name="chatbubbles-outline"></ion-icon></span>
+			Bytes
+		</li>
+		<li class="item" data-url="{{ url_for('.reports') }}" id="reports">
+			<span class="icon"><i class="fa fa-pie-chart"></i></span>
+			Reports		
+		</li>
+		<li class="item" data-url="{{ url_for('.tests') }}" id="tests">
+			<span class="icon"><i class="fa fa-thermometer"></i></span>
+			Tests	
+		</li>
+		<div id="dropdown">
+			<div id="drop">
+				<span class="icon"><i class="fa fa-database"></i></span>
+				Models				
+			</div>
+			<div id="dropdowns">
+				<div class="drop-item" data-url="{{ url_for('.users') }}" id="users">
+					<span class="icon"><i class="fa fa-users"></i></span>
+					Users			
+				</div>
+				<div class="drop-item" data-url="{{ url_for('.feed') }}" id="feedback">
+					<span class="icon"><i class="fa fa-message"></i></span>
+					Feedback		
+				</div>
+				<div class="drop-item" data-url="{{ url_for('.quotes') }}" id="quotes">
+					<span class="icon"><i class="fa fa-file-code"></i></span>
+					Quotes
+				</div>
+				<div class="drop-item" data-url="{{ url_for('.comments') }}" id="comments">
+					<span class="icon"><i class="fa fa-home"></i></span>
+					Comments		
+				</div>				
+			</div>
+		</div>
+		<li class="item" data-url="{{ url_for('.profile', username=current_user.username) }}" id="secret">
+			<span class="icon"><i class="fa fa-user-secret"></i></span>
+			Profile		
+		</li>
+	</ul>
+</div>
+
+<script>
+	const links = ['home', 'bytes'];
+	const dropdown = document.getElementById("dropdown");
+	
+	links.forEach(function(link){
+		var element = document.getElementById(link);
+
+		element.addEventListener('click', function(){
+			var url = element.getAttribute("data-url");
+
+			window.location.href = url;
+		});		
+	});
+
+
+	var drop = document.getElementById("dropdowns");
+	document.getElementById("drop").addEventListener('click', function(){
+	
+		drop.classList.toggle("active");
+
+		sessionStorage.setItem("models", drop.id);
+	});
+
+	window.addEventListener("load", function(){
+		var models = sessionStorage.getItem("models");
+
+		if(models){
+			models.
+			models.classList.add("active");
+		}		
+	});
+</script>

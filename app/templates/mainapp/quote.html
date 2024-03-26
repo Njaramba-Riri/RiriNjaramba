@@ -52,10 +52,16 @@
             </button>
         </form>
     </div>
-    <div class="alt">
+    <div class="alt" id="text">
         <p>Alternatively, you can send me an <a href="mailto:jamesriri03@gmail.com">email</a>.</p>
     </div>
+    <div class="footer">
+        <p>&copy;2024. <span>RiriNjaramba</span>&trade;. All rights reserved.</p>
+        <p>Made with <i class="fa fa-fire"></i> and <i class="fa fa-heart"></i> by Riri.</p>
+    </div>  
 </div>
+{% endblock %}
+
 {% block js %}
     {{ super() }}
     {{ pagedown.include_pagedown() }}
@@ -74,5 +80,4 @@
             });
         });
     </script>
-{% endblock %}
 {% endblock %}

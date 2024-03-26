@@ -9,6 +9,9 @@ config.py
 .idea
 /.idea/
 
+font/
+uploads/
+
 *.sql
 *.log
 *.sqlite

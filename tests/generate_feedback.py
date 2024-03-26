@@ -1,11 +1,14 @@
+import os
 import logging
 import random
+import hashlib
 
 from faker import Faker
 
 from app import db
 from app.blogs.models import Posts, Tag, Comments, CommentReply
 from app.main.models import Feedback
+from app.auth.models import User
 
 logging.basicConfig(format=("%(asctime)s:%(name)s:%(levelname)s:%(message)s"))
 logging.getLogger().setLevel(logging.DEBUG)
@@ -13,6 +16,34 @@ logging.getLogger().setLevel(logging.DEBUG)
 log = logging.getLogger(__name__)
 fake = Faker()
 Faker.seed(123)
+
+
+def generate_users(n: int):
+    for i in range(n):
+        user = User()
+        
+        user.email = fake.email()
+        user.display_name = fake.name()
+        user.username = str(user.display_name).split(None)[0]
+        user.set_password("testing12")
+        city = fake.city()
+        country = fake.country()
+        user.location = f'{city}, {country}'
+        user.bio = fake.sentence()
+        user.about = fake.text(max_nb_chars=2000)
+        user.interests = random.choice(['Farming', 'Technology', 'Hunting', 'Bowling'])
+        user.confirmed = random.choice([0, 1])
+        user.role_id = random.choice([1, 2])
+        user.avatar_hash = hashlib.md5(user.email.encode('utf-8')).hexdigest()
+        user.created = fake.date_this_decade(before_today=True, after_today=False)
+        user.last_seen = fake.date_this_year(before_today=True, after_today=False)
+        
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
 def generate_tag(n: int):
     """Generates blog post tags.
@@ -67,7 +98,7 @@ def generate_comment(n: int):
             db.session.rollback()
     return comments
 
-def generate_comment_replies(n: int, comment: list) -> db.Model:
+def generate_comment_replies(n: int, comment: list):
     """Generates replies on the comments made to the blog. 
 
     Args:

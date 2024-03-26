@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlparse, urljoin
 
 logger = logging.getLogger(__name__)
 
@@ -8,7 +9,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy import exc
 from app import db
 from .forms import LoginForm, RegisterForm, forgotPass, resetPassword
-from .models import User
+from .models import User, Permission
 
 from ..email import send_email
 
@@ -32,13 +33,11 @@ def before_request():
 def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('mainapp.index'))
-    user_id = session.get('id')
-    user = User.query.filter_by(id=user_id).first_or_404()
-    email = user.email
-    username = user.username
-    # if not email or username or current_user.confirmed:
-    #     return redirect(url_for('mainapp.index'))
-    return render_template("auth/unconfirmed.html", username=username, email=email)
+    username = current_user.username
+    email = current_user.email
+    
+    return render_template("auth/unconfirmed.html", permission=Permission, 
+                           username=username, email=email)
 
 @auth_blueprint.route('/signin', methods=['POST', 'GET'])
 def signin():
@@ -49,13 +48,14 @@ def signin():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user, remember=form.remember.data)
-            next_url = request.args.get('next')
+            next_url = session.pop('next', None)
             if next_url:
-                flash("You have been logged in", category="info")
                 return redirect(next_url)
-            flash(f"{current_user.username }, you have been logged in, welcome.", category="info")
-            return redirect(url_for('mainapp.index'))
-        flash("Wrong credentials, kindly try again.", category="warning")
+            elif user.is_administrator():
+                return redirect(url_for('admin.dashboard'))
+            else:
+                return redirect(url_for('blogs.blog_index'))
+    session['next'] = request.args.get('next', '/')
     return render_template("auth/login.html", form=form)
 
 @auth_blueprint.route('/register', methods=['POST', 'GET'])
@@ -77,7 +77,7 @@ def register():
             send_email(to=new_user.email, subject="Confirm Your Account", 
                        template="auth/email/confirm", user=new_user, token=token)
             flash("Thank you for registering, welcome to my blog", category="info")
-            return redirect(url_for('auth.unconfirmed'))
+            return redirect(url_for('auth.signin'))
         except exc.IntegrityError as e:
             db.session.rollback()
             logger.error("Error while registerin user: {}".format(e))
@@ -120,7 +120,7 @@ def forgotpass():
                    template="auth/email/reset", user=user, secret=token)
         flash("An email with reset instructions has just been sent to you.", category="info")
         return redirect(url_for('.signin'))
-    return render_template("auth/forgot.html", form=form)
+    return render_template("auth/forgot.html", form=form, permission=Permission)
 
 
 @auth_blueprint.route('/password-reset/<string:token>/', methods=['POST', 'GET'])
@@ -137,7 +137,6 @@ def password_reset(token):
 
     
 @auth_blueprint.route('/logout')
-@login_required
 def logout():
     logout_user()
     return redirect(url_for('mainapp.index'))

@@ -1,0 +1,46 @@
+{% import 'admin/include/pagination.html' as paginate %}
+
+<div class="tables">
+    <div class="heading">
+        <h2>Received Quotes <ion-icon name="chatbubbles-outline"></ion-icon></h2>
+        <label>
+            <input type="text" name="" id="search" placeholder="Search comments">
+            <ion-icon name="search-outline"></ion-icon>
+        </label>
+    </div> 
+    <div class="table-main">
+        <table id="comments">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Service</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                </tr>                
+            </thead>
+            <tbody>
+                {% for quote in quotes %}
+                <tr class="toBlog" > 
+
+                    <td class="data" title="{{ quote.name }}">
+                        <img src="{{ url_for('static', filename='images/user.png') }}" alt="">
+                        {{ (quote.name).split()[0] }}
+                    </td>
+                    <td class="data">
+                        <a href="mailto:{{ quote.email }}">{{ quote.email }}</a>
+                    </td>
+                    <td class="data">{{ quote.service }}</td>
+                    <td class="data">{{ quote.description | truncate(50) | safe }}</td>
+                    <td class="data">{{ quote.sent.strftime('%Y-%m-%d') }}</td>  
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagin">
+            {% if pagin %}
+                {{ paginate.pagination_widget(pagin,'.quotes')}}
+            {% endif %}
+        </div>                        
+    </div>
+</div> 

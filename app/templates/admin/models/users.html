@@ -1,0 +1,110 @@
+{% import 'admin/include/pagination.html' as paginate %}
+
+<div class="tables">
+    <div class="heading">
+        <h2>Users <small style="font-size: 1rem !important;"><i class="fa fa-users"></i></small></h2>
+        <label>
+            <input type="text" name="" id="search" placeholder="Search comments">
+            <ion-icon name="search-outline"></ion-icon>
+        </label>
+    </div> 
+    <div class="table-main">
+        <table id="comments">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Active</th>
+                    <th>Posts</th>
+                    <th>Comments</th>
+                    <th>Actions</th>
+                </tr>                
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr class="toBlog" title="Click to go to blog."> 
+                    {% if not user.email %}
+                        <td class="data"><img src="{{ user.gravatar(256) }}" alt=""></td>
+                    {% else %}
+                        <td class="data" style="display: flex; flex-direction: column;" 
+                        title="{% if user.display_name %} {{ user.display_name}} {% endif %}">
+                            <img src="{{ url_for('static', filename='images/user.png') }}" alt="">
+                            {{ user.username }}
+                        </td>
+                    {% endif %}
+                    <td class="data">
+                        <a href="mailto:{{ user.email }}">
+                            {{ user.email }}
+                        </a>
+                    </td>
+                    {% if user.location %}
+                        <td class="data" title="{{ user.location }}">
+                            <a href="https://www.maps.google/?{{ user.location }}">{{ user.location | truncate(15, true) }}</a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <small>
+                                <i class="fa fa-info-circle"></i> 
+                                Not Available  
+                            </small>
+                        </td>
+                    {% endif %}  
+                    {% if user.confirmed  %}
+                        <td title="Confirmed">
+                            <small style="color: seagreen;"><i class="fa fa-check-circle"></i></small>
+                        </td>             
+                    {% else %}
+                        <td title="Unconfirmed">
+                            <small style="color: brown;"><i class="fa fa-warning"></i></small>
+                        </td>
+                    {% endif %}
+                    <td>
+                        {{ (user.created).strftime('%Y-%m-%d')}}
+                    </td>
+                    <td>{{ (user.last_seen).strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        {{ user.posts.post | length }}
+                    </td>
+                    <td> {{ user.comments.comment | length }}</td>
+                    <td>
+                        <div class="icons">
+                            <i class="fa fa-pen-fancy" id="edit" title="Edit" data-url="{{ url_for('.update_user', user_id=user.id) }}"></i>
+                            {% if not user.is_administrator() %}
+                                <i class="fa fa-trash-arrow-up" id="remove" title="Remove" 
+                                data-url="{{ url_for('.remove_user', user_id=user.id) }}" ></i>
+                            {% endif %}
+                            {% if user.is_administrator() %}
+                                <i class="fa fa-eye" id="view" title="View" 
+                                data-url="{{ url_for('.profile', username=current_user.username) }}"></i>
+                            {% else %}
+                                <i class="fa fa-eye" id="view" title="View Profile" 
+                                data-url="{{ url_for('.user_profile', user_id=user.id)}}"></i>
+                            {% endif %}
+                        </div>
+                    </td>                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagin">
+            {% if pagination %}
+                {{ paginate.pagination_widget(pagination,'.users')}}
+            {% endif %}
+        </div>                        
+    </div>
+</div>
+<script>
+    var elements = ["#edit", "#view", "#remove"]; elements.forEach(function(element){ var related = document.querySelectorAll(element);
+
+        related.forEach(function(rela){
+            rela.addEventListener('click', function(){
+                var url = rela.getAttribute("data-url");
+
+                window.location.href = url;
+            });
+        });
+    });
+</script>

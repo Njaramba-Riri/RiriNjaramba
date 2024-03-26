@@ -81,12 +81,33 @@ document.addEventListener("DOMContentLoaded", (event) => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', (event) => {
     const nav = document.querySelector("#nav");
     const sidebar = document.querySelector("html[sidebar-open] ")
     const close = document.querySelector(".close-button");
     const about = document.getElementById("about-me");
     const theme = document.getElementById("theme");
+    const dropdown = document.getElementById("dropdown");
+    const drop_menu = document.getElementById("dropdown-menu");
+    const actions = ['mouseover', 'mouseout', 'click'];
+
+    if (dropdown){
+        actions.forEach(function(action) {
+            dropdown.addEventListener(action, function() {
+                if (action === 'mouseover' || action === 'click') {
+                    drop_menu.classList.add('active');
+                } else if (action === 'mouseout') {
+                    drop_menu.classList.remove('active');
+                }
+            });
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (!dropdown.contains(event.target)) {
+                drop_menu.classList.remove('active');
+            }
+        });        
+    }
 
     window.addEventListener('scroll', () => {
        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20){
@@ -247,4 +268,57 @@ document.addEventListener("DOMContentLoaded", (event) => {
             }
         });
     });
+});
+
+document.addEventListener("DOMContentLoaded", (event) =>{
+    search = document.getElementById("search");
+
+    if (search) {
+        search.addEventListener('keyup', () => {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("comments");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2]; // Assuming you're searching in the first column
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        // Highlight matching text
+                        td.innerHTML = txtValue.replace(new RegExp(filter, 'gi'), (match) => {
+                            return `<span class="highlight">${match}</span>`;
+                        });
+                        tr[i].classList.remove('hide');
+                    } else {
+                        tr[i].classList.add('hide');
+                        tr[i].style.setProperty('--delay', i / 25 + 's');
+                    }
+                }
+            }
+
+            // Remove highlighting if input is empty
+            if (filter === '') {
+                const highlighted = document.querySelectorAll('.highlight');
+                highlighted.forEach((el) => {
+                    el.outerHTML = el.innerHTML;
+                });
+            }
+        
+        });;
+    }
+});
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    var error = document.getElementById("text");
+    var errorWidth = error.clientWidth;
+    var errorHeight = error.clientHeight;
+    var viewportWidth = window.innerWidth;
+    var viewportHeight = window.innerHeight;
+    var leftPosition = (viewportWidth - errorWidth) / 2;
+    var topPosition = (viewportHeight - errorHeight) / 2;
+
+    error.style.left = leftPosition + 'px';
+    error.style.top = topPosition + 'px';
 });

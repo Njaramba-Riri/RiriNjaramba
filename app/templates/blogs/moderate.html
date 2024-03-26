@@ -9,11 +9,13 @@
 <div class="moderate">
     {% set moderate = True %}
     <div class="comments">
-        <h2>Comment Moderation</h2>
+        <div class="db" id="db">
+            <p data-url="{{ url_for('.comments') }}"><i class="fa fa-database"></i>View All</p>
+            <h2>Comment Moderation</h2>            
+        </div>
         {% for comment in comments %}
             <div class="vomment">
                 <div class="comm-user">
-                    
                     {% if comment.author.gravatar %}
                         <img src="{{ comment.author.gravatar(256) }}" alt="">
                     {% else %}
@@ -38,6 +40,12 @@
                 {% if moderate %}
                     {% if comment.disabled %}
                         <a class="btn btn-info btn-xs" href="{{ url_for('.moderate_enable', id=comment.id, page=page) }}">Enable</a>
+                        <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_delete', id=comment.id, page=page) }}" id="edi-brief">Delete</a>
+                        <div class="bio-modal">
+                            <div class="bio-body">
+                                <p>This action will delete this comment from the database, it can't be restored!.</p>
+                            </div>
+                        </div>
                     {% else %}
                         <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable', id=comment.id, page=page) }}">Disable</a>
                     {% endif %}                
@@ -58,4 +66,25 @@
     {{ super() }}
     {{ moment.include_moment() }}
     {{ pagedown.include_pagedown() }}
+
+    <script>
+        var nav = document.getElementById("nav");
+        var db = document.getElementById("db"); 
+
+        db.addEventListener('click', ()=>{
+            var url = document.querySelector('#db p').getAttribute("data-url");
+            setTimeout(function(){
+                window.location.href = url;
+            }, 1000);
+        });
+
+        window.addEventListener('scroll', ()=>{
+            if(nav.classList.contains('scrolled')){
+                nav.style.position = 'relative';
+                db.classList.add('top');
+            }else{
+                db.classList.remove('top');
+            }
+        });
+    </script>
 {% endblock %}

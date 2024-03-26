@@ -8,23 +8,17 @@
 <div class="blogs-page">
     <div class="items">
         <div class="blog">
-            <div class="header">
-                <a href="{{ url_for('.blog', title=blog.title) }}#comments">
-                    <span class="label label-primary">
-                    {{ blog.comments.count() }} Comments
-                    </span>
-                </a>
-                {% if blog.title_html %}
-                    <h2>{{ blog.post_html | safe }}</h2>
-                {% else %}
-                    <h2>{{ blog.title }} </h2>
-                {% endif %}
-            </div>
             <div class="overview">
-                <p>Posted by: <span><a href="{{ url_for('users.user', username=blog.post_author)}}">{{ blog.post_author }}</a></span> </p>
-                <p>On: <span>{{ moment(blog.date_created).format('LLLL')}}</span></p>
+                <p>Authored by: 
+                    <span>
+                        <a href="{{ url_for('users.user', username=blog.post_author)}}">
+
+                            {{ blog.post_author }}
+                        </a>
+                    </span> </p>
+                <p>On: <span>{{ moment(blog.date_created).format('LL')}}</span></p>
                 {% if blog.updated %}
-                    <p>Last update: <span>{{ moment(blog.date_updated).format('LLLL') }}</span> 
+                    <p>Last update: <span>{{ moment(blog.date_updated).format('LLL') }}</span> 
                         [{{ moment(blog.date_updated).fromNow() }}]</p>
                 {% endif %}   
                 {% if current_user == blog.author %}
@@ -32,9 +26,21 @@
                 {% elif current_user.is_administrator() %}
                     <a href="{{ url_for('.edit_blog', title=blog.title)}}">Edit [Admin].</a>
                 {% endif %}
+                <a href="{{ url_for('.blog', title=blog.title) }}#comments">
+                    <span class="label label-primary">
+                    {{ blog.comments.count() }} Comments
+                    </span>
+                </a>
                 <button class="submit" onclick="goBack()">Go Back</button>
             </div>
             <div class="blog-content">
+                <div class="header">
+                    {% if blog.title_html %}
+                        <h2>{{ blog.post_html | safe }}</h2>
+                    {% else %}
+                        <h2>{{ blog.title }} </h2>
+                    {% endif %}
+                </div>                
                 {% if blog.post_html %}
                     {{ blog.post_html | safe }}
                 {% else %}
@@ -54,12 +60,24 @@
             {% endif %}
             {% for comment in comments %}
                 {% if not comment.disabled %}
-                    <div class="blog-comment">
+                    <div class="blog-comment" id="{{ comment.id }}">
                         <div class="author">
                             <div class="name">
                                 <p>
                                     <span>{{  moment(comment.date).fromNow() }}</span>
-                                    <span>{{ comment.name }},</span>
+                                    {% if comment.author.id == current_user.id %}
+                                        you
+                                    {% else %}    
+                                        <span id="{{ comment.name }}">
+                                            {% if comment.author.display_name %}
+                                                {{ (comment.author.display_name).split()[0] }},
+                                            {% elif comment.author.username %}
+                                                {{ comment.author.username | title }},
+                                            {% else %}
+                                                {{ comment.name }},
+                                            {% endif %}                                       
+                                        </span>
+                                     {% endif %}
                                 </p>
                             </div>                    
                             <div class="date">
@@ -100,7 +118,7 @@
                                     </div>
                                     <p class="mid">or</p>
                                 {% endif %}
-                            <form action="{{ url_for('blogs.blog', title=blog.title) }}" method="post">
+                                <form action="{{ url_for('blogs.comment_reply', comment_id=comment.id) }}" method="post">
                                     {{ reply.hidden_tag() }}
                                     {% for field in reply %}
                                         {% if field.type == 'HiddenField' %}
@@ -122,9 +140,9 @@
                                                 {% endif %}
                                             {% endif %}  
                                             {% if field.errors %}
-                                            {% for e in field.erros %}
-                                            <p class="help-block">{{e}}</p>
-                                            {% endfor %}
+                                                {% for e in field.erros %}
+                                                    <p class="help-block">{{e}}</p>
+                                                {% endfor %}
                                             {% endif %}                              
                                         {% elif field.type == 'TextAreaField' %}
                                             <div class="actual">
@@ -137,12 +155,12 @@
                                                 </div>
                                             {% else %}
                                                 <div class="">
-                                                    {{ field(class_='reply-btn') }}
+                                                    {{ field(class_='reply-btn', title=url_for('.comment_reply', comment_id=comment.id)) }}
                                                 </div>
                                             {% endif %}
                                         {% endif %}                                    
                                     {% endfor %}
-                            </form>                      
+                                </form>                      
                             </div>
                         </div>             
                     </div>
@@ -151,8 +169,8 @@
                         <div class="author">
                             <div class="name">
                                 <p>
-                                    <span>{{  moment(comment.date).fromNow() }}</span>
-                                    <span>{{ comment.name }},</span>
+                                    <span>{{  moment(comment.date).fromNow() }},</span>
+                                    <span>{{ comment.author.display_name }}</span>
                                 </p>
                             </div>                    
                             <div class="date">
@@ -161,10 +179,15 @@
                         </div>
                         <div class="authored">
                             <div class="reply" style="text-decoration: line-through;">
-                                {{ comment.comment }}
+                                {{ comment.comment | truncate(20) }}
                             </div>
                         </div>  
-                        <small style="color: brown;"><i class="fa fa-warning"></i> This comment is disabled by moderators. <i class="fa fa-warning"></i></small>
+                        <small style="color: brown;">
+                            <i class="fa fa-warning"></i> 
+                            This comment is disabled by moderators. 
+                            <i class="fa fa-warning"></i>
+                            <a href="" style="text-decoration: none; padding-left: 1rem;">Learn more <i class="fa fa-info-circle"></i></a>
+                        </small>
                     </div>
                 {% endif %}
             {% endfor %}

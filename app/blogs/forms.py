@@ -5,8 +5,8 @@ from wtforms.validators import Email, DataRequired, Length, Regexp
 from flask_pagedown.fields import PageDownField
 
 class BlogPost(FlaskForm):
-    title = PageDownField("Blog title", validators=[DataRequired(message="Jameni, this field can't be empty.")])
-    body = PageDownField("Your blog content", validators=[DataRequired()])
+    title = TextAreaField("Blog title", validators=[DataRequired(message="Jameni, this field can't be empty.")])
+    body = TextAreaField("Your blog content", validators=[DataRequired()])
     submit = SubmitField("Publish")
 
 class CommentForm(FlaskForm):

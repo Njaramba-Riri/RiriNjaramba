@@ -53,39 +53,76 @@
         <h1>What I am offering?.</h1>
         <div class="flex">
             <div class="flex-card">
-                <h2>ML Engineering.</h2>
+                <h2  >ML Engineering.</h2>
                 <p>I design and deploy machine learning models, transforming raw data into actionable insights.
-                    My solutions are tailored to your specific sector, driving innovation and growth.</p>                
+                    My solutions are tailored to your specific sector, driving innovation and growth.</p> 
+                <div class="toq" >
+                     <a href="{{ url_for('.quote')}}" class="quote-link" data-title="ML Engineering">
+                        Get a Quote
+                        <i class="fa fa-arrow-right"></i>
+                    </a> 
+                </div>    
             </div>
             <div class="flex-card">
                 <h2>MLOps.</h2>
                 <p>
                     I implement MLOps practices to streamline the machine learning workflow. 
                     This includes automating model training, testing, and deployment processes, leading to more efficient and reliable outcomes.
-                </p>                
+                </p> 
+                <div class="toq" >
+                    <a href="{{ url_for('.quote')}}" class="quote-link" data-title="MLOps">
+                       Get a Quote
+                       <i class="fa fa-arrow-right"></i>
+                   </a> 
+               </div>                   
             </div>
             <div class="flex-card">
-                <h2>Experiment tracking.</h2>
+                <h2 >Experiment tracking.</h2>
                 <p>I utilize tools like Weights & Biases and MLFlow to track and manage machine learning experiments. 
-                    This ensures transparency, reproducibility, and aids in model optimization.</p>                
+                    This ensures transparency, reproducibility, and aids in model optimization.
+                </p>
+                <div class="toq" >
+                    <a href="{{ url_for('.quote')}}" class="quote-link" data-title="Experiment tracking">
+                       Get a Quote
+                       <i class="fa fa-arrow-right"></i>
+                   </a> 
+               </div>                    
             </div>
             <div class="flex-card">
                 <h2>Model Deployment.</h2>
                 <p>I ensure that machine learning models are efficiently deployed and monitored. 
                     I handle versioning, packaging, and performance monitoring, ensuring your models deliver optimal results.
-                </p>                
+                </p>  
+                <div class="toq">
+                    <a href="{{ url_for('.quote')}}">
+                       Get a Quote
+                       <i class="fa fa-arrow-right"></i>
+                   </a> 
+               </div>                  
             </div>
             <div class="flex-card">
                 <h2>IT Consultation.</h2>
                 <p>With a strong background in IT, I provide consultation services to help businesses leverage technology to meet their objectives. 
                     This includes strategic planning of IT initiatives, system implementation, and IT infrastructure management.
-                </p>                
+                </p>    
+                <div class="toq">
+                    <a href="{{ url_for('.quote')}}">
+                       Get a Quote
+                       <i class="fa fa-arrow-right"></i>
+                   </a> 
+               </div>                
             </div>
             <div class="flex-card">
                 <h2>IT Support.</h2>
                 <p>I provide IT support services to ensure your technology infrastructure runs smoothly and efficiently. 
                     This includes troubleshooting, system updates, and user training.
                 </p>
+                <div class="toq">
+                    <a href="{{ url_for('.quote')}}">
+                       Get a Quote
+                       <i class="fa fa-arrow-right"></i>
+                   </a> 
+               </div>    
             </div>
         </div>
     </section>
@@ -143,7 +180,7 @@
     <section class="Njaramba" id="contacts">
         <div class="moree">
             <div class="contact">
-                <h2>Found something interesting?. Leave a message.</h2>
+                <h2>Satisfied with any of my services?. Leave a message. :)</h2>
                 <form action="{{ url_for('mainapp.index') }}" method="post">
                     {{ form.hidden_tag() }}
                     {% for field in form %}
@@ -218,35 +255,65 @@
             </div>            
         </div>
         <div class="footer">
-            <hr>
-            <footer>
-                <div class="copy">
-                    <p>2024.All rights reserved&copy;</p>
-                </div>
-                <div class="heart">
-                    <p>Made with <i class="fa fa-heart"></i> by Riri.</p>
-                </div>
-            </footer>             
-        </div>  
+            <p>&copy;All rights reserved.2024</p>
+            <p>Made with <i class="fa fa-heart"></i> and <i class="fa fa-fire"></i> by Riri.</p>
+        </div>          
     </section>
 </div>
 {% block js %}
+{{ super() }}
 <script>
     var hospital = document.getElementById('hospital');
     var prediction = document.getElementById('prediction');
     var vision = document.getElementById('vision');
 
+
+    // titles.forEach(function(link){
+    //     link.addEventListener('click', function(){
+    //         var title = this.parentElement.getAttribute('data-title');
+    //         sessionStorage.setItem('title', title);
+    //     });
+    // });
+
+    document.querySelectorAll('.quote-link').forEach(function(link) {
+        link.addEventListener('click', function() {
+            var title = this.getAttribute('data-title');
+            sessionStorage.setItem('title', title);
+        });
+    });
+
+    function scrollTrigger(selector, callback){
+        const elements = document.querySelectorAll(selector);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(function(entry){
+                if (entry.isIntersecting){
+                    entry.target.classList.add('animate');
+                    callback && callback(entry.target);
+                }else{
+                    entry.target.classList.remove('animate');
+                }
+            });
+        });
+
+        elements.forEach((ele) => observer.observe(ele));
+    }
+
+    scrollTrigger('.flex-card', (ele) =>{
+        console.log(`Card "${ele.textContent}" is now visible!`);
+    });
+
     hospital.addEventListener('click', () =>{
         window.open('https://github.com/Njaramba-Riri/Hospital', '_blank');
-    })
+    });
 
     prediction.addEventListener('click', () => {
         window.open('https://github.com/Njaramba-Riri/expenditure-prediction', '_blank')
-    })
+    });
 
     vision.addEventListener('click', () => {
         window.open('https://github.com/Njaramba-Riri/PyTorch', '_blank');
-    })
+    });
 </script>
 {% endblock %}
 {% endblock %}

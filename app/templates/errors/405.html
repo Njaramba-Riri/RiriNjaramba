@@ -3,21 +3,22 @@
 {% block title %}Not Allowed - Riri Njaramba {% endblock %}
 
 {% block content %}
-    {% include 'include/nav.html' %}
-    {% include 'include/sidebar.html' %}
-    <div class="error">
-        <div class="text">
-            <h3>Method Not Allowed.</h3>
-            <p>The requested resource requires your request to have</p>
-            <button onclick="goBack()" id="back">Go Back</button>
-        </div>
+{% include 'include/nav.html' %}
+{% include 'include/sidebar.html' %}
+<div class="error">
+    <div class="text" id="text">
+        <h3>Method Not Allowed.</h3>
+        <p>The requested resource requires your request to have privileges which sadly, you don't have.</p>
+        <p>Thinking this could be an error?. Reach out.</p>
+        <button onclick="goBack()" id="back">Go Back</button>
     </div>
-    {% block js %}
+</div>
+{% endblock %}
+{% block js %}
     {{ super() }}
     <script>
         function goBack(){
             window.history.back()
         }
     </script>
-    {% endblock js %}
-{% endblock %}
+{% endblock js %}
