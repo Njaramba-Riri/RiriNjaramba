@@ -1,0 +1,72 @@
+.savigation{
+    position: fixed;
+    width: 250px;
+    background-color: #020525;
+    height: 100%;
+}
+.dark-theme .savigation{
+    background-color: #000000;
+}
+.savigation div{
+    display: flex;
+    align-items: start;
+    margin: .3rem;
+    margin-bottom: 3rem;
+}
+.savigation div img{
+    width: 3rem;
+    height: auto;
+    border-radius: 50%;
+    border: 2px double var(--white);
+}
+.savigation div span{
+    color: whitesmoke;
+    font-weight: 600;
+}
+.savigation div span:hover{
+    color: wheat;
+}
+.savigation ul{
+    padding: 0;
+}
+.savigation ul li{
+    list-style: none;
+    margin: .5rem 0;
+    padding: .5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--white);
+}
+.savigation ul li:last-child{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+.savigation ul li:last-child:hover span{
+    padding-left: 1rem;
+    transition: padding-left .6s ease-in-out;
+}
+.savigation ul li a{
+    display: flex;
+    align-items: center;
+}
+.savigation ul{
+    font-size: .8em;
+    font-family: 'Times New Roman', Times, monospace;
+    font-weight: 600;
+    margin-left: .2rem;
+}
+.savigation ul .icon{
+    font-size: 1rem;
+    margin-right: .2rem;
+}
+.savigation ul li:hover,
+.savigation ul li.hovered{
+    background: linear-gradient(45deg,gray, gainsboro);
+    color: var(--light-blue);
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    transition: padding-left .6s ease-in-out;
+}
